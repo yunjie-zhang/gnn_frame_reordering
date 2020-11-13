@@ -32,6 +32,10 @@ def load_tsv(tsv_path: str):
 def make_graph(feature_path: str):
     g = dgl.graph((torch.tensor([0, 1]), torch.tensor([1, 2])))
     g.add_nodes(2)
+    g.ndata['h'] = torch.ones(5, 1)
+    g.add_nodes(1)
+    print(g.ndata['h'])
+
     print(g.num_nodes())
 
 
