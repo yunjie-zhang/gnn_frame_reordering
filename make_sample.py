@@ -27,7 +27,7 @@ def load_tsv(tsv_path: str):
     for key in ret_dict.keys():
         print("{}\t{}".format(key, len(ret_dict[key])))
 
-    return video2acc_dict
+    return ret_dict
 
 
 if __name__=="__main__":
