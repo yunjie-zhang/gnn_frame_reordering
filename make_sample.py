@@ -71,19 +71,20 @@ def make_graph(feature_path: str, video2acc_dict):
         video_cnt += 1
         video_idx += FRAME_CNT
 
-    makePicPair(video_cnt, FRAME_CNT)
-
-    g = dgl.heterograph({('pic', 'nb', 'pic'):(torch.tensor([0, 0, 2]), torch.tensor([1, 2, 3])), ('acc', 'own', 'pic'):(torch.tensor([0, 1, 0]), torch.tensor([1, 2, 3]))})
+    ret_pic_node = makePicPair(video_cnt, FRAME_CNT)
+    g = dgl.heterograph({('pic', 'nb', 'pic'): (ret_pic_node[0], ret_pic_node[1])})
+    #g = dgl.heterograph({('pic', 'nb', 'pic'):(torch.tensor([0, 0, 2]), torch.tensor([1, 2, 3])), ('acc', 'own', 'pic'):(torch.tensor([0, 1, 0]), torch.tensor([1, 2, 3]))})
     pic_node_num = g.num_nodes('pic')
-    acc_node_num = g.num_nodes('acc')
-    print("Current number of node {} and {}.".format(pic_node_num, acc_node_num))
-    g.nodes['pic'].data['h'] = torch.ones(pic_node_num, 1)
-    g.nodes['acc'].data['h'] = torch.ones(acc_node_num, 1)
-    print(g.successors(0, etype='own'))
+    print(pic_node_num)
+    #acc_node_num = g.num_nodes('acc')
+    #print("Current number of node {} and {}.".format(pic_node_num, acc_node_num))
+    #g.nodes['pic'].data['h'] = torch.ones(pic_node_num, 1)
+    #g.nodes['acc'].data['h'] = torch.ones(acc_node_num, 1)
+    #print(g.successors(0, etype='own'))
     #print(g.ndata['h'][0])
     #print(g.ndata['h'][3])
     #print(g.ndata['h'][10])
-    print(g.num_nodes())
+    #print(g.num_nodes())
 
 
 if __name__=="__main__":
