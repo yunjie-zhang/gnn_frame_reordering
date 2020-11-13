@@ -24,10 +24,14 @@ def load_tsv(tsv_path: str):
             ret_dict[video_id_str].append(account_str)
 
             line = fp.readline()
-    for key in ret_dict.keys():
-        print("{}\t{}".format(key, len(ret_dict[key])))
+#    for key in ret_dict.keys():
+#        print("{}\t{}".format(key, len(ret_dict[key])))
 
     return ret_dict
+
+def make_graph(feature_path: str):
+    g = dgl.graph((torch.tensor([0, 1]), torch.tensor([1, 2])))
+    print(g.num_nodes())
 
 
 if __name__=="__main__":
