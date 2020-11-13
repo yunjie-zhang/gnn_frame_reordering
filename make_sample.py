@@ -1,6 +1,6 @@
 import numpy as np
 import random
-import torch 
+import torch
 import dgl
 import sys
 
@@ -31,6 +31,7 @@ def load_tsv(tsv_path: str):
 
 def make_graph(feature_path: str):
     g = dgl.graph((torch.tensor([0, 1]), torch.tensor([1, 2])))
+    g.add_nodes(2)
     print(g.num_nodes())
 
 
