@@ -30,13 +30,13 @@ def load_tsv(tsv_path: str):
     return ret_dict
 
 def make_graph(feature_path: str):
-    g = dgl.heterograph({('pic', 'nb', 'pic'):(torch.tensor([0, 0, 2]), torch.tensor([1, 2, 3])), ('acc', 'own', 'pic'):(torch.tensor([0, 1, 2]), torch.tensor([1, 2, 3]))})
+    g = dgl.heterograph({('pic', 'nb', 'pic'):(torch.tensor([0, 0, 2]), torch.tensor([1, 2, 3])), ('acc', 'own', 'pic'):(torch.tensor([0, 1, 0]), torch.tensor([1, 2, 3]))})
     pic_node_num = g.num_nodes('pic')
     acc_node_num = g.num_nodes('acc')
     print("Current number of node {} and {}.".format(pic_node_num, acc_node_num))
     g.nodes['pic'].data['h'] = torch.ones(pic_node_num, 1)
     g.nodes['acc'].data['h'] = torch.ones(acc_node_num, 1)
-    print(g.nodes['pic'].successors(0))
+    print(g.nodes['pic'].successors(0, etype='own'))
     #print(g.ndata['h'][0])
     #print(g.ndata['h'][3])
     #print(g.ndata['h'][10])
