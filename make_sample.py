@@ -35,6 +35,9 @@ def make_graph(feature_path: str):
     g.ndata['h'] = torch.ones(5, 1)
     g.add_nodes(1)
     print(g.ndata['h'])
+    g.add_nodes(1, {'h': torch.ones(1, 1), 'w': torch.ones(1, 1)})
+    print(g.ndata['h'])
+    print(g.ndata['w'])
 
     print(g.num_nodes())
 
