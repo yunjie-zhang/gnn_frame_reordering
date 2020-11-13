@@ -22,6 +22,12 @@ def makePicPair(total_cnt, interval):
     ret_torch = torch.tensor(pair_list, dtype=torch.int)
     ret_torch = torch.transpose(ret_torch, 0, 1)
     print("Size of torch tensor is {}".format(ret_torch.shape))
+    for i in range(20):
+        print(ret_torch[0][i], end="\t")
+    print("\t")
+    for i in range(20):
+        print(ret_torch[1][i], end="\t")
+
     return ret_torch
 
 def load_tsv(tsv_path: str):
