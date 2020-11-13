@@ -35,6 +35,7 @@ def make_graph(feature_path: str):
     print("Current number of node {}".format(node_num))
     g.ndata['h'] = torch.ones(node_num, 1)
     g.ndata['h'][0] = torch.zeros(1, 1)
+    print(g.successors(0))
     print(g.ndata['h'][0])
     print(g.ndata['h'][3])
     print(g.ndata['h'][10])
