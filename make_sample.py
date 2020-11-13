@@ -13,7 +13,7 @@ def load_tsv(tsv_path: str):
         while line:
             fields = line.split("\t")
             if len(fields) < 2:
-                fp.readline()
+                line = fp.readline()
                 continue
 
             account_str = fields[0]
@@ -23,7 +23,7 @@ def load_tsv(tsv_path: str):
                 ret_dict[video_id_str] = []
             ret_dict[video_id_str].append(account_str)
 
-            fp.readline()
+            line = fp.readline()
     for key in ret_dict.keys():
         print("{}\t{}".format(key, len(ret_dict[key])))
 
