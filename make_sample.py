@@ -36,3 +36,4 @@ def make_graph(feature_path: str):
 
 if __name__=="__main__":
     video2acc_dict = load_tsv(sys.argv[1])
+    make_graph("abc")
