@@ -30,9 +30,9 @@ def load_tsv(tsv_path: str):
     return ret_dict
 
 def make_graph(feature_path: str):
-    g = dgl.graph((torch.tensor([0, 1, 2]), torch.tensor([1, 2, 6])))
+    g = dgl.graph((torch.tensor([0, 0, 2]), torch.tensor([1, 2, 6])))
     node_num = g.num_nodes()
-
+    print("Current number of node {}".format(node_num))
     g.ndata['h'] = torch.ones(node_num, 1)
     print(g.ndata['h'][0])
     print(g.ndata['h'][6])
