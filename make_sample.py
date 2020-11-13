@@ -27,12 +27,12 @@ def makePicPair(total_cnt, interval):
     print("\t")
     for i in range(20):
         print(int(ret_torch[1][i]), end="\t")
-
+    print("\t")
     return ret_torch
 
 def load_tsv(tsv_path: str):
     #video_id -> account
-    ret_dict = dict()
+    video_id2acc = dict()
     with open(tsv_path, "r") as fp:
         line = fp.readline()
         line = fp.readline()
@@ -45,21 +45,30 @@ def load_tsv(tsv_path: str):
             account_str = fields[0]
             video_id_str = fields[1]
 
-            if video_id_str not in ret_dict:
-                ret_dict[video_id_str] = []
-            ret_dict[video_id_str].append(account_str)
+            if video_id_str not in video_id2acc:
+                video_id2acc[video_id_str] = []
+            video_id2acc[video_id_str].append(account_str)
 
             line = fp.readline()
 #    for key in ret_dict.keys():
 #        print("{}\t{}".format(key, len(ret_dict[key])))
 
-    return ret_dict
+    return video_id2acc
 
-def make_graph(feature_path: str, video2acc_dict):
+def make_graph(tsv_path:str, feature_path: str):
+    video_id2acc = load_tsv(tsv_path)
+
+
     file_list = os.listdir(feature_path)
     print("A total of {} videos found.".format(len(file_list)))
 
-    video_name_list = [cur_str.split(".")[0] for cur_str in file_list]
+    video_name_list_full = [cur_str.split(".")[0] for cur_str in file_list]
+
+    video_name_list = []
+    for video_id in video_name_list_full:
+        if video_id in video_id2acc:
+            video_name_list.append(video_id)#to make sure that video_name_list is the intersection of two parts.
+
     idx2video_name = dict()
 
     video_idx = 0
@@ -88,5 +97,4 @@ def make_graph(feature_path: str, video2acc_dict):
 
 
 if __name__=="__main__":
-    video2acc_dict = load_tsv(sys.argv[1])
-    make_graph(sys.argv[2], video2acc_dict)
+    make_graph(sys.argv[1], sys.argv[2])
