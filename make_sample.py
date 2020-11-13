@@ -1,6 +1,6 @@
 import numpy as np
 import random
-import pytorch as th
+import torch as th
 import dgl
 import sys
 
