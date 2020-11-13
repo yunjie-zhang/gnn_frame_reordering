@@ -95,8 +95,10 @@ def make_graph(tsv_path:str, feature_path: str):
             video_name2idx[cur_video_id] = []
         video_name2idx[cur_video_id].append(key)#key is the index here
 
+    for cur_video_id in video_name2idx:
+        if len(video_name2idx[cur_video_id]) != FRAME_CNT:
+            print("Frame count doesn't match.")
 
-    
     ret_pic_node = makePicPair(video_cnt, FRAME_CNT)
     g = dgl.heterograph({('pic', 'nb', 'pic'): (ret_pic_node[0], ret_pic_node[1])})
     #g = dgl.heterograph({('pic', 'nb', 'pic'):(torch.tensor([0, 0, 2]), torch.tensor([1, 2, 3])), ('acc', 'own', 'pic'):(torch.tensor([0, 1, 0]), torch.tensor([1, 2, 3]))})
