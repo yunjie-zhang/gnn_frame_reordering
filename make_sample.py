@@ -33,6 +33,7 @@ def makePicPair(total_cnt, interval):
 def load_tsv(tsv_path: str, video_id_set):
     #video_id -> account
     video_id2acc = dict()
+    account2info = dict()
     with open(tsv_path, "r") as fp:
         line = fp.readline()
         line = fp.readline()
@@ -44,7 +45,7 @@ def load_tsv(tsv_path: str, video_id_set):
 
             account_str = fields[0]
             video_id_str = fields[1]
-
+            cat_1 = fields[3]
             if video_id_str not in video_id_set:
                 line = fp.readline()
                 continue
@@ -52,12 +53,12 @@ def load_tsv(tsv_path: str, video_id_set):
             if video_id_str not in video_id2acc:
                 video_id2acc[video_id_str] = []
             video_id2acc[video_id_str].append(account_str)
-
+            account2info[account_str] = cat_1
             line = fp.readline()
 #    for key in ret_dict.keys():
 #        print("{}\t{}".format(key, len(ret_dict[key])))
 
-    return video_id2acc
+    return video_id2acc, account2info
 
 def make_graph(tsv_path:str, feature_path: str):
     file_list = os.listdir(feature_path)
@@ -65,7 +66,7 @@ def make_graph(tsv_path:str, feature_path: str):
 
     video_name_list_full = [cur_str.split(".")[0] for cur_str in file_list]
     video_name_list_set = set(video_name_list_full)
-    video_id2acc = load_tsv(tsv_path, video_name_list_set)
+    video_id2acc, _ = load_tsv(tsv_path, video_name_list_set)
 
 
 
@@ -77,6 +78,7 @@ def make_graph(tsv_path:str, feature_path: str):
 
     print("A total of {} videos found.".format(len(video_name_list)))
     idx2video_name = dict()
+    video_name2idx = dict()
 
     video_idx = 0
     video_cnt = 0
@@ -87,6 +89,14 @@ def make_graph(tsv_path:str, feature_path: str):
         video_cnt += 1
         video_idx += FRAME_CNT
 
+    for key in idx2video_name.keys():
+        cur_video_id = idx2video_name[key]
+        if cur_video_id not in video_name2idx:
+            video_name2idx[cur_video_id] = []
+        video_name2idx[cur_video_id].append(key)#key is the index here
+
+
+    
     ret_pic_node = makePicPair(video_cnt, FRAME_CNT)
     g = dgl.heterograph({('pic', 'nb', 'pic'): (ret_pic_node[0], ret_pic_node[1])})
     #g = dgl.heterograph({('pic', 'nb', 'pic'):(torch.tensor([0, 0, 2]), torch.tensor([1, 2, 3])), ('acc', 'own', 'pic'):(torch.tensor([0, 1, 0]), torch.tensor([1, 2, 3]))})
