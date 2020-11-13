@@ -34,12 +34,12 @@ def make_graph(feature_path: str):
     pic_node_num = g.num_nodes('pic')
     acc_node_num = g.num_nodes('acc')
     print("Current number of node {} and {}.".format(pic_node_num, acc_node_num))
-    g.ndata['h'] = torch.ones(node_num, 1)
-    g.ndata['h'][0] = torch.zeros(1, 1)
-    print(g.successors(0))
-    print(g.ndata['h'][0])
-    print(g.ndata['h'][3])
-    print(g.ndata['h'][10])
+    g.nodes['pic'].ndata['h'] = torch.ones(pic_node_num, 1)
+    g.nodes['acc'].ndata['h'] = torch.ones(acc_node_num, 1)
+    print(g.nodes['pic'].successors(0))
+    #print(g.ndata['h'][0])
+    #print(g.ndata['h'][3])
+    #print(g.ndata['h'][10])
     print(g.num_nodes())
 
 
