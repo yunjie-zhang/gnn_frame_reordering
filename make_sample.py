@@ -3,6 +3,26 @@ import random
 import torch
 import dgl
 import sys
+import os
+
+FRAME_CNT = 8
+
+def makePicPair(total_cnt, interval):
+    base_pair_list = []
+    pair_list = []
+    for i in range(interval):
+        for j in range(interval):
+            if i != j:
+                base_pair_list.append([i, j])
+    for i in range(total_cnt):
+        base_idx = i * interval
+        for base_pair in base_pair_list:
+            pair_list.append([base_pair[0] + base_idx, base_pair[1] + base_idx])
+    print("A total of {} pairs.".format(len(pair_list)))
+    ret_torch = torch.tensor(pair_list, dtype=torch.int)
+    ret_torch = torch.transpose(ret_torch, 0, 1)
+    print("Size of torch tensor is {}".format(ret_torch.shape))
+    return ret_torch
 
 def load_tsv(tsv_path: str):
     #video_id -> account
@@ -29,7 +49,24 @@ def load_tsv(tsv_path: str):
 
     return ret_dict
 
-def make_graph(feature_path: str):
+def make_graph(feature_path: str, video2acc_dict):
+    file_list = os.listdir(feature_path)
+    print("A total of {} videos found.".format(len(file_list)))
+
+    video_name_list = [cur_str.split(".")[0] for cur_str in file_list]
+    idx2video_name = dict()
+
+    video_idx = 0
+    video_cnt = 0
+    for i in range(len(video_name_list)):
+        cur_video_id = video_name_list[i]
+        for j in range(FRAME_CNT):
+            idx2video_name[video_idx + j] = cur_video_id
+        video_cnt += 1
+        video_idx += FRAME_CNT
+
+    makePicPair(video_cnt, FRAME_CNT)
+
     g = dgl.heterograph({('pic', 'nb', 'pic'):(torch.tensor([0, 0, 2]), torch.tensor([1, 2, 3])), ('acc', 'own', 'pic'):(torch.tensor([0, 1, 0]), torch.tensor([1, 2, 3]))})
     pic_node_num = g.num_nodes('pic')
     acc_node_num = g.num_nodes('acc')
@@ -45,4 +82,4 @@ def make_graph(feature_path: str):
 
 if __name__=="__main__":
     video2acc_dict = load_tsv(sys.argv[1])
-    make_graph("abc")
+    make_graph(sys.argv[2], video2acc_dict)
