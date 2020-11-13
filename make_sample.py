@@ -60,7 +60,7 @@ def make_graph(tsv_path:str, feature_path: str):
 
 
     file_list = os.listdir(feature_path)
-    print("A total of {} videos found.".format(len(file_list)))
+
 
     video_name_list_full = [cur_str.split(".")[0] for cur_str in file_list]
 
@@ -69,6 +69,8 @@ def make_graph(tsv_path:str, feature_path: str):
         if video_id in video_id2acc:
             video_name_list.append(video_id)#to make sure that video_name_list is the intersection of two parts.
 
+            
+    print("A total of {} videos found.".format(len(video_name_list)))
     idx2video_name = dict()
 
     video_idx = 0
