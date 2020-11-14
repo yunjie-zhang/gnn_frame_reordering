@@ -97,7 +97,7 @@ def makeAccPair(account2video, video_name2idx):
         pic_idx = pair[1]
     acc_idx2pic_list.append([acc_idx, pic_idx])
     pic2acc_idx_list.append([pic_idx, acc_idx])
-
+    print("WTF {}".format(len(account2pic_list)))
     ret_torch_1 = torch.tensor(acc_idx2pic_list, dtype=torch.int)
     ret_torch_1 = torch.transpose(ret_torch_1, 0, 1)
     print("Size of torch tensor is {}".format(ret_torch_1.shape))
@@ -106,7 +106,7 @@ def makeAccPair(account2video, video_name2idx):
     ret_torch_2 = torch.transpose(ret_torch_2, 0, 1)
     print("Size of torch tensor is {}".format(ret_torch_2.shape))
 
-    return ret_torch_1, ret_torch_2
+    return ret_torch_1, ret_torch_2, account2idx
 
 
 
@@ -150,7 +150,7 @@ def make_graph(tsv_path:str, feature_path: str):
 
 
 
-    ret_acc2pic_node, ret_pic2acc_node = makeAccPair(account2video, video_name2idx)
+    ret_acc2pic_node, ret_pic2acc_node, account2idx = makeAccPair(account2video, video_name2idx)
     ret_pic_node = makePicPair(video_cnt, FRAME_CNT)
 
     g = dgl.heterograph({('pic', 'nb', 'pic'): (ret_pic_node[0], ret_pic_node[1]),
