@@ -119,7 +119,7 @@ def make_graph(tsv_path:str, feature_path: str):
 
 
 
-    account2video, account2info, video_name_list = loadTsv(tsv_path, video_name_list_set)
+    account2video, account2info, video_name_list = loadTsv(tsv_path, video_name_list_full)
 
 
 
