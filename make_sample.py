@@ -95,9 +95,9 @@ def makeAccPair(account2video, video_name2idx):
     for pair in account2pic_list:
         acc_idx = account2idx[pair[0]]
         pic_idx = pair[1]
-    acc_idx2pic_list.append([acc_idx, pic_idx])
-    pic2acc_idx_list.append([pic_idx, acc_idx])
-    print("WTF {} {}".format(len(acc_idx2pic_list), len(pic2acc_idx_list)))
+        acc_idx2pic_list.append([acc_idx, pic_idx])
+        pic2acc_idx_list.append([pic_idx, acc_idx])
+    
     ret_torch_1 = torch.tensor(acc_idx2pic_list, dtype=torch.int)
     ret_torch_1 = torch.transpose(ret_torch_1, 0, 1)
     print("Size of torch tensor is {}".format(ret_torch_1.shape))
