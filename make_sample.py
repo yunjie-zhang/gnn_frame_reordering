@@ -100,9 +100,11 @@ def makeAccPair(account2video, video_name2idx):
 
     ret_torch_1 = torch.tensor(acc_idx2pic_list, dtype=torch.int)
     ret_torch_1 = torch.transpose(ret_torch_1, 0, 1)
+    print("Size of torch tensor is {}".format(ret_torch_1.shape))
 
     ret_torch_2 = torch.tensor(pic2acc_idx_list, dtype=torch.int)
     ret_torch_2 = torch.transpose(ret_torch_2, 0, 1)
+    print("Size of torch tensor is {}".format(ret_torch_2.shape))
 
     return ret_torch_1, ret_torch_2
 
