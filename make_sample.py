@@ -123,11 +123,8 @@ def make_graph(tsv_path:str, feature_path: str):
 
     account2video, account2info, video_name_list = loadTsv(tsv_path, video_name_list_full)
 
-
-
-
-
-
+    print("A total of {} accounts found.".format(len(account2video)))
+    print("A total of {} accounts found.".format(len(account2info)))
     print("A total of {} videos found.".format(len(video_name_list)))
     idx2video_name = dict()
     video_name2idx = dict()
