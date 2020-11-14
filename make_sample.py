@@ -161,6 +161,10 @@ def make_graph(tsv_path:str, feature_path: str):
     acc_node_num = g.num_nodes('acc')
     print("Total pictures count {}".format(pic_node_num))
     print("Total accounts count {}".format(acc_node_num))
+    g.nodes['pic'].data['img_feat'] = torch.ones(pic_node_num, 1024)
+    g.nodes['acc'].data['acc_feat'] = torch.ones(acc_node_num, 1024)
+
+    save_graphs("./test_data.bin", g)
     #acc_node_num = g.num_nodes('acc')
     #print("Current number of node {} and {}.".format(pic_node_num, acc_node_num))
     #g.nodes['pic'].data['h'] = torch.ones(pic_node_num, 1)
