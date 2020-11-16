@@ -41,7 +41,6 @@ def loadTsv(tsv_path: str, video_name_list_full):
         line = fp.readline()#the first line is title
         line = fp.readline()
         while line:
-            print(line)
             fields = line.split("\t")
             if len(fields) < 2:
                 line = fp.readline()
@@ -52,6 +51,7 @@ def loadTsv(tsv_path: str, video_name_list_full):
             cat_0 = fields[2]
             cat_1 = fields[3]
             cat_2 = fields[4]
+            info_str = "_".join([cat_0, cat_1, cat_2])
             if video_id_str not in video_name_list_set:
                 line = fp.readline()
                 continue
@@ -59,7 +59,7 @@ def loadTsv(tsv_path: str, video_name_list_full):
             if account_str not in account2video:
                 account2video[account_str] = []
             account2video[account_str].append(video_id_str)
-            account2info[account_str] = cat_1
+            account2info[account_str] = info_str
             video_from_tsv.add(video_id_str)
             line = fp.readline()
 #    for key in ret_dict.keys():
@@ -177,10 +177,25 @@ def make_graph(tsv_path:str, feature_path: str):
         cur_frame_feature_th = torch.from_numpy(cur_frame_feature)
         g.nodes['pic'].data['img_feat'][i] = cur_frame_feature_th
 
+    cat_0_set = set()
+    cat_1_set = set()
+    cat_2_set = set()
+
     for j in range(acc_node_num):
         account_id = idx2account[j]
         account_info = account2info[account_id]
+        fields = account_info.split('_')
+        cat_0_set.add(fields[0])
+        cat_1_set.add(fields[1])
+        cat_2_set.add(fields[2])
 
+    cat_0_list = list(cat_0_set)
+    cat_1_list = list(cat_1_set)
+    cat_2_list = list(cat_2_set)
+
+    print("\t".join(cat_0_list))
+    print("\t".join(cat_1_list))
+    print("\t".join(cat_2_list))
 
     #idx2video_name node id -> video  name
     #account2idx
