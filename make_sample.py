@@ -41,6 +41,7 @@ def loadTsv(tsv_path: str, video_name_list_full):
         line = fp.readline()#the first line is title
         line = fp.readline()
         while line:
+            print(line)
             fields = line.split("\t")
             if len(fields) < 2:
                 line = fp.readline()
@@ -48,7 +49,9 @@ def loadTsv(tsv_path: str, video_name_list_full):
 
             account_str = fields[0]
             video_id_str = fields[1]
+            cat_0 = fields[2]
             cat_1 = fields[3]
+            cat_2 = fields[4]
             if video_id_str not in video_name_list_set:
                 line = fp.readline()
                 continue
