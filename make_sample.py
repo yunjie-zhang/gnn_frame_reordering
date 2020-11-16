@@ -170,12 +170,13 @@ def make_graph(tsv_path:str, feature_path: str):
         feat_offset = i % FRAME_CNT
 
         video_feature = np.load(os.path.join(feature_path, video_name + ".npy"))
-        print("Full feature size: {}".format(video_feature.shape))
         cur_frame_feature = video_feature[feat_offset]
         cur_frame_feature_th = torch.from_numpy(cur_frame_feature)
-        print(cur_frame_feature.shape, "; ", cur_frame_feature_th.shape)
         g.nodes['pic'].data['img_feat'][i] = cur_frame_feature_th
 
+    for j in range(acc_node_num):
+        account_id = idx2account[j]
+        account_info = account2info[account_id]
 
 
     #idx2video_name node id -> video  name
