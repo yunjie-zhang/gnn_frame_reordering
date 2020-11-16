@@ -193,8 +193,11 @@ def make_graph(tsv_path:str, feature_path: str):
     cat_1_list = list(cat_1_set)
     cat_2_list = list(cat_2_set)
 
+    print("Category 0")
     print("\t".join(cat_0_list))
+    print("Category 1")
     print("\t".join(cat_1_list))
+    print("Category 2")
     print("\t".join(cat_2_list))
 
     #idx2video_name node id -> video  name
