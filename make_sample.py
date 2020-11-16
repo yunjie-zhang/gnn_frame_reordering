@@ -73,9 +73,11 @@ def loadTsv(tsv_path: str, video_name_list_full):
 
 def makeAccPair(account2video, video_name2idx):
     account2idx = dict()
+    idx2account = dict()
     acc_idx = 0
     for acc_str in account2video.keys():
         account2idx[acc_str] = acc_idx
+        idx2account[acc_idx] = acc_str
         acc_idx += 1
 
     account2video_list = []
@@ -106,7 +108,7 @@ def makeAccPair(account2video, video_name2idx):
     ret_torch_2 = torch.transpose(ret_torch_2, 0, 1)
     print("Size of torch tensor is {}".format(ret_torch_2.shape))
 
-    return ret_torch_1, ret_torch_2, account2idx
+    return ret_torch_1, ret_torch_2, account2idx, idx2account
 
 
 
@@ -150,7 +152,7 @@ def make_graph(tsv_path:str, feature_path: str):
 
 
 
-    ret_acc2pic_node, ret_pic2acc_node, account2idx = makeAccPair(account2video, video_name2idx)
+    ret_acc2pic_node, ret_pic2acc_node, account2idx, idx2account = makeAccPair(account2video, video_name2idx)
     ret_pic_node = makePicPair(video_cnt, FRAME_CNT)
 
     g = dgl.heterograph({('pic', 'nb', 'pic'): (ret_pic_node[0], ret_pic_node[1]),
@@ -161,8 +163,22 @@ def make_graph(tsv_path:str, feature_path: str):
     acc_node_num = g.num_nodes('acc')
     print("Total pictures count {}".format(pic_node_num))
     print("Total accounts count {}".format(acc_node_num))
-    g.nodes['pic'].data['img_feat'] = torch.ones(pic_node_num, 1024)
+    g.nodes['pic'].data['img_feat'] = torch.ones(pic_node_num, 1024)#
     g.nodes['acc'].data['acc_feat'] = torch.ones(acc_node_num, 1024)
+    for i in range(pic_node_num):
+        video_name = idx2video_name[i]
+        feat_offset = i % FRAME_CNT
+
+        video_feature = np.load(os.path.join(feature_path, video_name + ".npy"))
+        cur_frame_feature = video_feature[i]
+        cur_frame_feature_th = torch.from_numpy(cur_frame_feature)
+        g.nodes['pic'].data['img_feat'][i] = cur_frame_feature_th
+        print(video_feature.shape, cur_frame_feature_th.size)
+
+
+
+    #idx2video_name node id -> video  name
+    #account2idx
 
     dgl.save_graphs("./test_data.bin", g)
     #acc_node_num = g.num_nodes('acc')
@@ -177,4 +193,4 @@ def make_graph(tsv_path:str, feature_path: str):
 
 
 if __name__=="__main__":
-    make_graph(sys.argv[1], sys.argv[2])
+    make_graph(sys.argv[1], sys.argv[2], sys.argv[3])
