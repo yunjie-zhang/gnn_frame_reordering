@@ -193,4 +193,4 @@ def make_graph(tsv_path:str, feature_path: str):
 
 
 if __name__=="__main__":
-    make_graph(sys.argv[1], sys.argv[2], sys.argv[3])
+    make_graph(sys.argv[1], sys.argv[2])
