@@ -173,7 +173,7 @@ def make_graph(tsv_path:str, feature_path: str):
         print("Full feature size: {}".format(video_feature.shape))
         cur_frame_feature = video_feature[feat_offset]
         cur_frame_feature_th = torch.from_numpy(cur_frame_feature)
-        print(video_feature.shape, "; ", cur_frame_feature_th.shape)
+        print(cur_frame_feature.shape, "; ", cur_frame_feature_th.shape)
         g.nodes['pic'].data['img_feat'][i] = cur_frame_feature_th
 
 
