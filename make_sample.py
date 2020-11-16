@@ -163,8 +163,8 @@ def make_graph(tsv_path:str, feature_path: str):
     acc_node_num = g.num_nodes('acc')
     print("Total pictures count {}".format(pic_node_num))
     print("Total accounts count {}".format(acc_node_num))
-    g.nodes['pic'].data['img_feat'] = torch.ones(pic_node_num, 1024)#
-    g.nodes['acc'].data['acc_feat'] = torch.ones(acc_node_num, 1024)
+    g.nodes['pic'].data['img_feat'] = torch.ones(pic_node_num, 1000)#
+    g.nodes['acc'].data['acc_feat'] = torch.ones(acc_node_num, 1000)
     for i in range(pic_node_num):
         video_name = idx2video_name[i]
         feat_offset = i % FRAME_CNT
