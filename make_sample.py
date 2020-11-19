@@ -54,7 +54,7 @@ def makePicPair(total_cnt, interval, ratio):
     ret_torch = torch.transpose(ret_torch, 0, 1)
 
     label_torch = torch.tensor(label_list, dtype=torch.float)
-    label_torch = torch.transpose(label_torch, 0, 1)
+    #label_torch = torch.transpose(label_torch, 0, 1)
 
     train_mask_torch = torch.ones(pair_cnt, dtype=torch.bool)
     test_idx = int(pair_cnt * ratio)
@@ -64,10 +64,10 @@ def makePicPair(total_cnt, interval, ratio):
 
     print("Size of torch tensor is {}".format(ret_torch.shape))
     for i in range(20):
-        print(int(ret_torch[0][i]), end="\t")
+        print(int(ret_torch[0][i]), label_torch[i], train_mask_torch[i], end="\t")
     print("\t")
     for i in range(20):
-        print(int(ret_torch[1][i]), end="\t")
+        print(int(ret_torch[1][i]), label_torch[i], train_mask_torch[i], end="\t")
     print("\t")
     return ret_torch, label_torch, train_mask_torch
 
