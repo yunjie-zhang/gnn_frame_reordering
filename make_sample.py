@@ -197,7 +197,7 @@ def make_graph(tsv_path:str, feature_path: str):
 
 
     ret_acc2pic_node, ret_pic2acc_node, account2idx, idx2account = makeAccPair(account2video, video_name2idx)
-    ret_pic_node = makePicPair(video_cnt, FRAME_CNT)#who connects whom, who leads whom, training label
+    ret_pic_node = makePicPair(video_cnt, FRAME_CNT, 0.9)#who connects whom, who leads whom, training label
 
     g = dgl.heterograph({('pic', 'nb', 'pic'): (ret_pic_node[0], ret_pic_node[1]),
                          ('acc', 'pb', 'pic'): (ret_acc2pic_node[0], ret_acc2pic_node[1]),
