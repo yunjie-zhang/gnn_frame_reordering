@@ -59,7 +59,7 @@ def makePicPair(total_cnt, interval, ratio):
     train_mask_torch = torch.ones(pair_cnt, dtype=torch.bool)
     test_idx = int(pair_cnt * ratio)
     for i in range(test_idx, pair_cnt):
-        train_mask_torch[i] = torch.bool(False)
+        train_mask_torch[i] = False
 
 
     print("Size of torch tensor is {}".format(ret_torch.shape))
