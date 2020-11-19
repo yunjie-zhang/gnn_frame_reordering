@@ -5,11 +5,36 @@ import dgl
 import sys
 import os
 
+cat_1_map = {
+    "游戏类": 9,
+    "资讯类": 14,
+    "电商零售类": 11,
+    "IT消电类": 0,
+    "服饰类": 7,
+    "家居建材类": 3,
+    "直营电商": 12,
+    "生活服务类": 10,
+    "运动娱乐休闲类": 15,
+    "美妆日化类": 13,
+    "交通类": 1,
+    "教育类": 5,
+    "医疗类": 2,
+    "金融服务类": 16,
+    "房产类": 4,
+    "面向企业类": 17,
+    "食品饮料类": 18,
+    "旅游类": 6,
+    "母婴护理类": 8
+}
+
+
 FRAME_CNT = 8
 
-def makePicPair(total_cnt, interval):
+def makePicPair(total_cnt, interval, ratio):
     base_pair_list = []
     pair_list = []
+    label_list = []
+
     for i in range(interval):
         for j in range(interval):
             if i != j:
@@ -18,9 +43,25 @@ def makePicPair(total_cnt, interval):
         base_idx = i * interval
         for base_pair in base_pair_list:
             pair_list.append([base_pair[0] + base_idx, base_pair[1] + base_idx])
-    print("A total of {} pairs.".format(len(pair_list)))
+            if base_pair[0] <= base_pair[1]:
+                label_list.append(1.0)
+            else:
+                label_list.append(0.0)
+
+    pair_cnt = len(pair_list)
+    print("A total of {} pairs.".format(pair_cnt))
     ret_torch = torch.tensor(pair_list, dtype=torch.int)
     ret_torch = torch.transpose(ret_torch, 0, 1)
+
+    label_torch = torch.tensor(label_list, dtype=torch.float)
+    label_torch = torch.transpose(label_torch, 0, 1)
+
+    train_mask_torch = torch.ones(pair_cnt, dtype=torch.bool)
+    test_idx = int(pair_cnt * ratio)
+    for i in range(test_idx, pair_cnt):
+        train_mask_torch[i] = torch.bool(False)
+
+
     print("Size of torch tensor is {}".format(ret_torch.shape))
     for i in range(20):
         print(int(ret_torch[0][i]), end="\t")
@@ -28,7 +69,7 @@ def makePicPair(total_cnt, interval):
     for i in range(20):
         print(int(ret_torch[1][i]), end="\t")
     print("\t")
-    return ret_torch
+    return ret_torch, label_torch, train_mask_torch
 
 def loadTsv(tsv_path: str, video_name_list_full):
     #video_id -> account
@@ -156,7 +197,7 @@ def make_graph(tsv_path:str, feature_path: str):
 
 
     ret_acc2pic_node, ret_pic2acc_node, account2idx, idx2account = makeAccPair(account2video, video_name2idx)
-    ret_pic_node = makePicPair(video_cnt, FRAME_CNT)
+    ret_pic_node = makePicPair(video_cnt, FRAME_CNT)#who connects whom, who leads whom, training label
 
     g = dgl.heterograph({('pic', 'nb', 'pic'): (ret_pic_node[0], ret_pic_node[1]),
                          ('acc', 'pb', 'pic'): (ret_acc2pic_node[0], ret_acc2pic_node[1]),
@@ -193,12 +234,17 @@ def make_graph(tsv_path:str, feature_path: str):
     cat_1_list = list(cat_1_set)
     cat_2_list = list(cat_2_set)
 
-    print("Category 0")
-    print("\t".join(cat_0_list))
-    print("Category 1")
+    print("======== Category 0 ========")
+    print("A total of {} category 0 found.".format(len(cat_0_list)))
+    for i in range(len(cat_0_list)):
+        print("\"{}\": {}".format(cat_0_list[i], i))
+    print("======== Category 1 ========")
+    print("A total of {} category 1 found.".format(len(cat_1_list)))
     print("\t".join(cat_1_list))
-    print("Category 2")
-    print("\t".join(cat_2_list))
+    print("======== Category 2 ========")
+    #print("\t".join(cat_2_list))
+    for i in range(len(cat_2_list)):
+        print("\"{}\": {}".format(cat_2_list[i], i))
 
     #idx2video_name node id -> video  name
     #account2idx
