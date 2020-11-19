@@ -64,11 +64,14 @@ def makePicPair(total_cnt, interval, ratio):
 
     print("Size of torch tensor is {}".format(ret_torch.shape))
     for i in range(20):
-        print(int(ret_torch[0][i]), label_torch[i], train_mask_torch[i], end="\t")
-    print("\t")
+        print(int(ret_torch[0][i]), end="\t")
+    print("\n")
     for i in range(20):
-        print(int(ret_torch[1][i]), label_torch[i], train_mask_torch[i], end="\t")
-    print("\t")
+        print(int(ret_torch[1][i]), end="\t")
+    print("\n")
+    for i in range(20):
+        print(int(ret_torch[0][i]), int(ret_torch[1][i]), float(label_torch[i]), int(train_mask_torch[i]), end="\t")
+    print("\n")
     return ret_torch, label_torch, train_mask_torch
 
 def loadTsv(tsv_path: str, video_name_list_full):
@@ -197,7 +200,7 @@ def make_graph(tsv_path:str, feature_path: str):
 
 
     ret_acc2pic_node, ret_pic2acc_node, account2idx, idx2account = makeAccPair(account2video, video_name2idx)
-    ret_pic_node = makePicPair(video_cnt, FRAME_CNT, 0.9)#who connects whom, who leads whom, training label
+    ret_pic_node, _, _ = makePicPair(video_cnt, FRAME_CNT, 0.9)#who connects whom, who leads whom, training label
 
     g = dgl.heterograph({('pic', 'nb', 'pic'): (ret_pic_node[0], ret_pic_node[1]),
                          ('acc', 'pb', 'pic'): (ret_acc2pic_node[0], ret_acc2pic_node[1]),
