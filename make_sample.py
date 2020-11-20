@@ -162,7 +162,7 @@ def makePicPair(total_cnt, interval, ratio):
         train_mask_torch[i] = False
 
 
-    print("Size of torch tensor is {}".format(ret_torch.shape))
+    print("Size of torch tensor is {} {} {}".format(ret_torch.shape, label_torch.shape, train_mask_torch.shape))
     for i in range(20):
         print(int(ret_torch[0][i]), end="\t")
     print("\n")
@@ -302,9 +302,9 @@ def make_graph(tsv_path:str, feature_path: str):
     ret_acc2pic_node, ret_pic2acc_node, account2idx, idx2account = makeAccPair(account2video, video_name2idx)
     ret_pic_node, label_torch, train_mask_torch = makePicPair(video_cnt, FRAME_CNT, 0.9)#who connects whom, who leads whom, training label
 
-    g = dgl.heterograph({('pic', 'nb', 'pic'): (ret_pic_node[0], ret_pic_node[1]),
-                         ('acc', 'pb', 'pic'): (ret_acc2pic_node[0], ret_acc2pic_node[1]),
-                         ('pic', 'blt', 'acc'): (ret_pic2acc_node[0], ret_pic2acc_node[1])})
+    g = dgl.heterograph({('pic', 'nb', 'pic'): (ret_pic_node[0], ret_pic_node[1]), #neighbor
+                         ('acc', 'pb', 'pic'): (ret_acc2pic_node[0], ret_acc2pic_node[1]), #publish
+                         ('pic', 'blt', 'acc'): (ret_pic2acc_node[0], ret_pic2acc_node[1])}) #belongs to
     #g = dgl.heterograph({('pic', 'nb', 'pic'):(torch.tensor([0, 0, 2]), torch.tensor([1, 2, 3])), ('acc', 'own', 'pic'):(torch.tensor([0, 1, 0]), torch.tensor([1, 2, 3]))})
     pic_node_num = g.num_nodes('pic')
     acc_node_num = g.num_nodes('acc')
@@ -312,6 +312,13 @@ def make_graph(tsv_path:str, feature_path: str):
     print("Total accounts count {}".format(acc_node_num))
     g.nodes['pic'].data['img_feat'] = torch.ones(pic_node_num, 1000)#
     g.nodes['acc'].data['acc_feat'] = torch.ones(acc_node_num, 119)
+
+
+    edge_num = g.num_edges(nb)
+    print("Total edges count{}".format(edge_num))
+    g.edges['nb'].data['label'] = label_torch
+    g.edges['nb'].data['train_mask'] = train_mask_torch
+
     for i in range(pic_node_num):
         video_name = idx2video_name[i]
         feat_offset = i % FRAME_CNT
