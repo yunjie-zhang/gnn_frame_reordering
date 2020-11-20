@@ -47,7 +47,9 @@ def train(root_dir: str, meta_data_path: str, batch_size: int):
     print("Device: {}, ID: {}, Avalability: {}".format(torch.cuda.get_device_name(device_id), str(device_id), torch.cuda.is_available()))
     glist, label_dict = load_graphs("./test_data.bin")
     print(type(glist), type(label_dict))
-
+    print(len(glist))
+    g = glist[0]
+    print(g.etypes)
     exit()
 
 
