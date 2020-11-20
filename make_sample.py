@@ -5,26 +5,126 @@ import dgl
 import sys
 import os
 
-cat_1_map = {
-    "游戏类": 9,
-    "资讯类": 14,
-    "电商零售类": 11,
-    "IT消电类": 0,
-    "服饰类": 7,
-    "家居建材类": 3,
-    "直营电商": 12,
-    "生活服务类": 10,
-    "运动娱乐休闲类": 15,
-    "美妆日化类": 13,
-    "交通类": 1,
-    "教育类": 5,
-    "医疗类": 2,
-    "金融服务类": 16,
-    "房产类": 4,
-    "面向企业类": 17,
-    "食品饮料类": 18,
-    "旅游类": 6,
-    "母婴护理类": 8
+cat_map = {
+                "网服": 0,
+                "游戏": 1,
+                "电商零售": 2,
+                "本地": 3,
+                "金融": 4,
+                "交通类": 5,
+                "直营电商": 6,
+                "食品饮料类": 7,
+                "母婴护理类": 8,
+                "教育类": 9,
+                "运动娱乐休闲类": 10,
+                "美妆日化类": 11,
+                "金融服务类": 12,
+                "生活服务类": 13,
+                "家居建材类": 14,
+                "面向企业类": 15,
+                "旅游类": 16,
+                "医疗类": 17,
+                "服饰类": 18,
+                "房产类": 19,
+                "游戏类": 20,
+                "IT消电类": 21,
+                "电商零售类": 22,
+                "资讯类": 23,
+                "高等教育": 24,
+                "生活用品": 25,
+                "招聘": 26,
+                "母婴服务": 27,
+                "装修服务": 28,
+                "其他面向企业类": 29,
+                "出行服务(含物流)": 30,
+                "鞋/箱包": 31,
+                "交易平台": 32,
+                "3C": 33,
+                "棋牌捕鱼": 34,
+                "工具": 35,
+                "休闲益智": 36,
+                "其他旅游类": 37,
+                "职业技能培训": 38,
+                "饰品/配饰": 39,
+                "工农业": 40,
+                "射击游戏": 41,
+                "金融综合线上平台": 42,
+                "综合电商": 43,
+                "医疗机构": 44,
+                "留学/语言培训": 45,
+                "招商加盟": 46,
+                "民办学校": 47,
+                "保险": 48,
+                "家具家装综合": 49,
+                "影音娱乐": 50,
+                "保姆家政": 51,
+                "其他资讯类": 52,
+                "服装": 53,
+                "商业零售": 54,
+                "信用卡": 55,
+                "其他食品饮料类": 56,
+                "其他房产类": 57,
+                "综合游戏平台": 58,
+                "教育类平台": 59,
+                "运营商": 60,
+                "车类配件及周边": 61,
+                "机械设备": 62,
+                "饮料/茶/酒水": 63,
+                "家具灯饰": 64,
+                "电商商家": 65,
+                "儿童/学生培训": 66,
+                "冲印摄影": 67,
+                "箱包": 68,
+                "体育器械": 69,
+                "第三方支付": 70,
+                "宠物服务": 71,
+                "策略游戏": 72,
+                "小额贷款": 73,
+                "丽人美发": 74,
+                "机动车销售与服务": 75,
+                "药品/保健品": 76,
+                "医疗美容": 77,
+                "跨境": 78,
+                "食品": 79,
+                "房地产": 80,
+                "汽车资讯与服务平台": 81,
+                "生活/健康": 82,
+                "配饰": 83,
+                "传统旅行社": 84,
+                "医疗平台": 85,
+                "其他直营电商": 86,
+                "旅游景点": 87,
+                "其他生活服务类": 88,
+                "其他家居建材类": 89,
+                "养成游戏": 90,
+                "其他电商零售类": 91,
+                "商务服务": 92,
+                "婚恋/交友": 93,
+                "证券": 94,
+                "在线旅游服务平台": 95,
+                "其他服饰类": 96,
+                "休闲装/正装": 97,
+                "运势测算": 98,
+                "家装建材": 99,
+                "酒店": 100,
+                "化妆品": 101,
+                "新闻": 102,
+                "角色扮演": 103,
+                "家纺家饰": 104,
+                "其他运动娱乐休闲类": 105,
+                "婚庆交友": 106,
+                "内衣": 107,
+                "展览": 108,
+                "护肤品/化妆品": 109,
+                "团购/折扣": 110,
+                "餐饮服务": 111,
+                "食品零食": 112,
+                "节能环保": 113,
+                "其他美妆日化类": 114,
+                "银行服务": 115,
+                "其他教育类": 116,
+                "家用电器": 117,
+                "洗涤/卫生用品": 118,
 }
 
 
@@ -200,7 +300,7 @@ def make_graph(tsv_path:str, feature_path: str):
 
 
     ret_acc2pic_node, ret_pic2acc_node, account2idx, idx2account = makeAccPair(account2video, video_name2idx)
-    ret_pic_node, _, _ = makePicPair(video_cnt, FRAME_CNT, 0.9)#who connects whom, who leads whom, training label
+    ret_pic_node, label_torch, train_mask_torch = makePicPair(video_cnt, FRAME_CNT, 0.9)#who connects whom, who leads whom, training label
 
     g = dgl.heterograph({('pic', 'nb', 'pic'): (ret_pic_node[0], ret_pic_node[1]),
                          ('acc', 'pb', 'pic'): (ret_acc2pic_node[0], ret_acc2pic_node[1]),
@@ -211,7 +311,7 @@ def make_graph(tsv_path:str, feature_path: str):
     print("Total pictures count {}".format(pic_node_num))
     print("Total accounts count {}".format(acc_node_num))
     g.nodes['pic'].data['img_feat'] = torch.ones(pic_node_num, 1000)#
-    g.nodes['acc'].data['acc_feat'] = torch.ones(acc_node_num, 1000)
+    g.nodes['acc'].data['acc_feat'] = torch.ones(acc_node_num, 119)
     for i in range(pic_node_num):
         video_name = idx2video_name[i]
         feat_offset = i % FRAME_CNT
@@ -229,9 +329,21 @@ def make_graph(tsv_path:str, feature_path: str):
         account_id = idx2account[j]
         account_info = account2info[account_id]
         fields = account_info.split('_')
-        cat_0_set.add(fields[0])
-        cat_1_set.add(fields[1])
-        cat_2_set.add(fields[2])
+
+        cat_0 = fields[0]
+        cat_1 = fields[1]
+        cat_2 = fields[2]
+
+        cat_0_set.add(cat_0)
+        cat_1_set.add(cat_1)
+        cat_2_set.add(cat_2)
+
+        if cat_0 in cat_map:
+            g.nodes['acc'].data['acc_feat'][j][cat_map[cat_0]] = 1.0
+        if cat_1 in cat_map:
+            g.nodes['acc'].data['acc_feat'][j][cat_map[cat_1]] = 1.0
+        if cat_2 in cat_map:
+            g.nodes['acc'].data['acc_feat'][j][cat_map[cat_2]] = 1.0
 
     cat_0_list = list(cat_0_set)
     cat_1_list = list(cat_1_set)
