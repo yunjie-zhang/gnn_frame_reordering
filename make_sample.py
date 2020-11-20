@@ -124,7 +124,7 @@ cat_map = {
                 "银行服务": 115,
                 "其他教育类": 116,
                 "家用电器": 117,
-                "洗涤/卫生用品": 118,
+                "洗涤/卫生用品": 118
 }
 
 
@@ -314,7 +314,7 @@ def make_graph(tsv_path:str, feature_path: str):
     g.nodes['acc'].data['acc_feat'] = torch.ones(acc_node_num, 119)
 
 
-    edge_num = g.num_edges(nb)
+    edge_num = g.num_edges('nb')
     print("Total edges count{}".format(edge_num))
     g.edges['nb'].data['label'] = label_torch
     g.edges['nb'].data['train_mask'] = train_mask_torch
