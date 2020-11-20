@@ -237,17 +237,22 @@ def make_graph(tsv_path:str, feature_path: str):
     cat_1_list = list(cat_1_set)
     cat_2_list = list(cat_2_set)
 
+    idx = -1
     print("======== Category 0 ========")
     print("A total of {} category 0 found.".format(len(cat_0_list)))
     for i in range(len(cat_0_list)):
-        print("\"{}\": {},".format(cat_0_list[i], i))
+        print("\"{}\": {},".format(cat_0_list[i], idx))
+        idx += 1
     print("======== Category 1 ========")
     print("A total of {} category 1 found.".format(len(cat_1_list)))
-    print("\t".join(cat_1_list))
+    for i in range(len(cat_1_list)):
+        print("\"{}\": {},".format(cat_1_list[i], idx))
+        idx += 1
     print("======== Category 2 ========")
     #print("\t".join(cat_2_list))
     for i in range(len(cat_2_list)):
-        print("\"{}\": {},".format(cat_2_list[i], i))
+        print("\"{}\": {},".format(cat_2_list[i], idx))
+        idx += 1
 
     #idx2video_name node id -> video  name
     #account2idx
