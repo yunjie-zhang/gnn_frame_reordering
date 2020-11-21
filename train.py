@@ -69,6 +69,11 @@ def train(root_dir: str, meta_data_path: str, batch_size: int):
         shuffle=True,
         drop_last=False,
         num_workers=4)
+
+    idx = 0
+    for input_nodes, edge_subgraph, blocks in dataloader:
+        print(input_nodes.size(), idx)
+        idx += 1
     exit()
 
 
