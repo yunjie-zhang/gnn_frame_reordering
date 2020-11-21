@@ -311,7 +311,7 @@ def make_graph(tsv_path:str, feature_path: str):
     print("Total pictures count {}".format(pic_node_num))
     print("Total accounts count {}".format(acc_node_num))
     g.nodes['pic'].data['img_feat'] = torch.ones(pic_node_num, 1000)#
-    g.nodes['acc'].data['acc_feat'] = torch.ones(acc_node_num, 119)
+    g.nodes['acc'].data['acc_feat'] = torch.zeros(acc_node_num, 1000)#119typles
 
 
     edge_num = g.num_edges('nb')
