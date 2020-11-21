@@ -11,6 +11,7 @@ from torch.utils.data import DataLoader
 from model import ReOrderingModel
 from pytorchtools import EarlyStopping
 from dgl.data.utils import load_graphs
+import dgl.function as fn
 
 def make_train_step(model, loss_fn, optimizer):
     # Builds function that performs a step in the train loop

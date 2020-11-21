@@ -7,6 +7,7 @@ import os
 from torch import nn
 import torch.nn.functional as F
 import dgl.nn as dglnn
+import dgl.function as fn
 
 class RGCN(nn.Module):
     def __init__(self, in_feats, hid_feats, out_feats, rel_names):
