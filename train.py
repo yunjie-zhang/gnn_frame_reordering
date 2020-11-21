@@ -59,7 +59,7 @@ def train(root_dir: str, meta_data_path: str, batch_size: int):
     model = ReOrderingModel(1000, 512, 64, g.etypes)
 
 
-    label = g.edges['click'].data['label']
+    label = g.edges['nb'].data['label']
     train_mask = g.edges['nb'].data['train_mask']
     node_features = {'pic': pic_feats, 'acc': acc_feats}
 
