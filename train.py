@@ -56,6 +56,7 @@ def train(root_dir: str, meta_data_path: str, batch_size: int):
     print(type(pic_feats), type(acc_feats))
     print(pic_feats.size())
     print(acc_feats.size())
+    model = ReOrderingModel(1000, 512, 64, g.etypes)
     exit()
 
 
