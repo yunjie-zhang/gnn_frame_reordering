@@ -57,6 +57,21 @@ def train(root_dir: str, meta_data_path: str, batch_size: int):
     print(pic_feats.size())
     print(acc_feats.size())
     model = ReOrderingModel(1000, 512, 64, g.etypes)
+
+
+    label = g.edges['click'].data['label']
+    train_mask = g.edges['nb'].data['train_mask']
+    node_features = {'pic': pic_feats, 'acc': acc_feats}
+
+    opt = torch.optim.Adam(model.parameters())
+    for epoch in range(10):
+        pred = model(g, node_features, 'nb')
+        loss = ((pred[train_mask] - label[train_mask]) ** 2).mean()
+        opt.zero_grad()
+        loss.backward()
+        opt.step()
+        print(loss.item())
+
     exit()
 
 
