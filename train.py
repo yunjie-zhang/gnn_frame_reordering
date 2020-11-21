@@ -69,7 +69,7 @@ def train(root_dir: str, meta_data_path: str, batch_size: int):
         shuffle=True,
         drop_last=False,
         num_workers=4)
-
+    exit()
 
 
     model = ReOrderingModel(1000, 512, 64, g.etypes)
