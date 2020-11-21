@@ -50,6 +50,9 @@ def train(root_dir: str, meta_data_path: str, batch_size: int):
     print(len(glist))
     g = glist[0]
     print(g.etypes)
+
+    pic_feats = g.nodes['pic'].data['img_feat']
+    acc_feats = g.nodes['acc'].data['acc_feat']
     exit()
 
 
