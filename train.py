@@ -57,7 +57,7 @@ def train(root_dir: str, meta_data_path: str, batch_size: int):
     acc_feats = g.nodes['acc'].data['acc_feat']
     edge_num = g.num_edges('nb')
     train_edge_num = edge_num * 0.8
-    train_eid_dict = {'nb': torch.arange(0, train_edge_num)}
+    train_eid_dict = {'nb': torch.arange(0, int(train_edge_num))}
     print(type(pic_feats), type(acc_feats))
     print(pic_feats.size())
     print(acc_feats.size())
