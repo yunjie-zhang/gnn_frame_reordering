@@ -72,7 +72,7 @@ def train(root_dir: str, meta_data_path: str, batch_size: int):
 
     idx = 0
     for input_nodes, edge_subgraph, blocks in dataloader:
-        print(input_nodes.size(), idx)
+        print(type(input_nodes), type(edge_subgraph), type(blocks), idx)
         idx += 1
     exit()
 
