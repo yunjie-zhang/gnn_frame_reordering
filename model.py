@@ -26,7 +26,7 @@ class RGCN(nn.Module):
         h = {k: F.relu(v) for k, v in h.items()}
         h = self.conv2(graph, h)
         return h
-"""
+
 class MLPPredictor(nn.Module):
     def __init__(self, in_features, out_classes):
         super().__init__()
@@ -66,7 +66,7 @@ class ReOrderingModel(nn.Module):
         h = self.sage(g, x)
         return self.pred(g, h, etype)
 
-"""
+
 class StochasticTwoLayerRGCN(nn.Module):
     def __init__(self, in_feat, hidden_feat, out_feat, rel_names):
         super().__init__()
