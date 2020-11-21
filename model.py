@@ -26,7 +26,7 @@ class RGCN(nn.Module):
         h = {k: F.relu(v) for k, v in h.items()}
         h = self.conv2(graph, h)
         return h
-
+"""
 class MLPPredictor(nn.Module):
     def __init__(self, in_features, out_classes):
         super().__init__()
@@ -66,3 +66,37 @@ class ReOrderingModel(nn.Module):
         h = self.sage(g, x)
         return self.pred(g, h, etype)
 
+"""
+class StochasticTwoLayerRGCN(nn.Module):
+    def __init__(self, in_feat, hidden_feat, out_feat, rel_names):
+        super().__init__()
+
+        self.conv1 = dglnn.HeteroGraphConv({
+                rel : dglnn.GraphConv(in_feat, hidden_feat, norm='right')
+                for rel in rel_names
+            })
+        self.conv2 = dglnn.HeteroGraphConv({
+                rel : dglnn.GraphConv(hidden_feat, out_feat, norm='right')
+                for rel in rel_names
+            })
+
+    def forward(self, blocks, x):
+        x = self.conv1(blocks[0], x)
+        x = self.conv2(blocks[1], x)
+        return x
+
+class ScorePredictor(nn.Module):
+    def __init__(self, num_classes, in_features):
+        super().__init__()
+        self.W = nn.Linear(2 * in_features, num_classes)
+
+    def apply_edges(self, edges):
+        data = torch.cat([edges.src['x'], edges.dst['x']])
+        return {'score': self.W(data)}
+
+    def forward(self, edge_subgraph, x):
+        with edge_subgraph.local_scope():
+            edge_subgraph.ndata['x'] = x
+            for etype in edge_subgraph.canonical_etypes:
+                edge_subgraph.apply_edges(self.apply_edges, etype=etype)
+            return edge_subgraph.edata['score']

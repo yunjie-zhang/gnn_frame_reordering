@@ -6,6 +6,7 @@ import copy
 import sys
 import pkbar
 import random
+import dgl
 from torch.utils.data import Dataset, TensorDataset
 from torch.utils.data import DataLoader
 from model import ReOrderingModel
@@ -54,9 +55,23 @@ def train(root_dir: str, meta_data_path: str, batch_size: int):
 
     pic_feats = g.nodes['pic'].data['img_feat']
     acc_feats = g.nodes['acc'].data['acc_feat']
+    edge_num = g.num_edges('nb')
+    train_edge_num = edge_num * 0.8
+    train_eid_dict = torch.arange(0, train_edge_num)
     print(type(pic_feats), type(acc_feats))
     print(pic_feats.size())
     print(acc_feats.size())
+
+    sampler = dgl.dataloading.MultiLayerFullNeighborSampler(2)
+    dataloader = dgl.dataloading.EdgeDataLoader(
+        g, train_eid_dict, sampler,
+        batch_size=64,
+        shuffle=True,
+        drop_last=False,
+        num_workers=4)
+
+
+
     model = ReOrderingModel(1000, 512, 64, g.etypes)
 
 
