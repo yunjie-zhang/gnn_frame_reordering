@@ -104,7 +104,7 @@ class StochasticTwoLayerRGCN(nn.Module):
 class ScorePredictor(nn.Module):
     def __init__(self, num_classes, in_features):
         super().__init__()
-        self.W = nn.Linear(2 * in_features, num_classes)
+        self.W = nn.Linear(2000, num_classes)
 
     def apply_edges(self, edges):
         data = torch.cat([edges.src['x'], edges.dst['x']])
