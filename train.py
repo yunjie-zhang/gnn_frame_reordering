@@ -66,6 +66,8 @@ def train(root_dir: str, meta_data_path: str, batch_size: int):
     sampler = dgl.dataloading.MultiLayerFullNeighborSampler(2)
     dataloader = dgl.dataloading.EdgeDataLoader(
         g, train_eid_dict, sampler,
+        exclude='reverse_types',
+        reverse_etypes={'pb': 'blt'},
         batch_size=64,
         shuffle=True,
         drop_last=False,
