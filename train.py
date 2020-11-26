@@ -95,9 +95,10 @@ def train(root_dir: str, meta_data_path: str, batch_size: int):
             acc_feats = blocks[0].nodes['acc'].data['acc_feat']
 
             #input_features = blocks[0].srcdata['features']
+            edge_num = edge_subgraph.num_edges('nb')
             edge_labels = edge_subgraph.edata['label']
-            print(type(pic_feats), type(acc_feats))
-            #print(pic_feats.size(), acc_feats.size(), edge_labels.size())
+            #print(type(pic_feats), type(acc_feats))
+            print(pic_feats.size(), acc_feats.size(), edge_num, type(edge_labels))
             #edge_predictions = model(edge_subgraph, blocks, input_features)
             #loss = compute_loss(edge_labels, edge_predictions)
             #opt.zero_grad()
