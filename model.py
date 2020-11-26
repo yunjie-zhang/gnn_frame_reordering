@@ -108,7 +108,7 @@ class ScorePredictor(nn.Module):
 
     def apply_edges(self, edges):
         data = torch.cat([edges.src['x'], edges.dst['x']], 1)
-        print(data.size())
+        #print(data.size())
         return {'score': self.W(data)}
 
     def forward(self, edge_subgraph, x):

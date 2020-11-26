@@ -106,10 +106,10 @@ def train(root_dir: str, meta_data_path: str, batch_size: int):
             edge_predictions = model(edge_subgraph, blocks, node_features)
 
             #edge_predictions = model(edge_subgraph, blocks, input_features)
-            #loss = compute_loss(edge_labels, edge_predictions)
-            #opt.zero_grad()
-            #loss.backward()
-            #opt.step()
+            loss = compute_loss(edge_labels, edge_predictions)
+            opt.zero_grad()
+            loss.backward()
+            opt.step()
     exit()
 
 
