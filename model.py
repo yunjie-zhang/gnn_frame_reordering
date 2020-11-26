@@ -107,7 +107,7 @@ class ScorePredictor(nn.Module):
         self.W = nn.Linear(2*in_features, num_classes)
 
     def apply_edges(self, edges):
-        data = torch.cat([edges.src['x'], edges.dst['x']])
+        data = torch.cat([edges.src['x'], edges.dst['x']], 1)
         print(data.size())
         return {'score': self.W(data)}
 
