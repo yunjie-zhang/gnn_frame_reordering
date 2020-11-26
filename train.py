@@ -84,9 +84,9 @@ def train(root_dir: str, meta_data_path: str, batch_size: int):
     hidden_features = 512
     out_features = 128
     num_classes = 1
-    #model = GNNRankModel(in_features, hidden_features, out_features, num_classes)
-    #model = model.cuda()
-    #opt = torch.optim.Adam(model.parameters())
+    model = GNNRankModel(in_features, hidden_features, out_features, num_classes, g.etypes)
+    model = model.cuda()
+    opt = torch.optim.Adam(model.parameters())
     for epoch in range(epoch_cnt):
         print("Epoch {}".format(epoch))
         for input_nodes, edge_subgraph, blocks in dataloader:
