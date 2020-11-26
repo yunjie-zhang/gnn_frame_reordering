@@ -104,12 +104,13 @@ class StochasticTwoLayerRGCN(nn.Module):
 class ScorePredictor(nn.Module):
     def __init__(self, num_classes, in_features):
         super().__init__()
-        self.W = nn.Sigmoid()
+        self.W = nn.Linear(in_features * 2, 1)
+        self.S = nn.Sigmoid()
 
     def apply_edges(self, edges):
         data = torch.cat([edges.src['x'], edges.dst['x']], 1)
         #print(data.size())
-        return {'score': self.W(data)}
+        return {'score': self.S(self.W(data))}
 
     def forward(self, edge_subgraph, x):
         with edge_subgraph.local_scope():
