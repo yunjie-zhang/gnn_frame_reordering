@@ -8,25 +8,7 @@ from torch import nn
 import torch.nn.functional as F
 import dgl.nn as dglnn
 import dgl.function as fn
-
-class RGCN(nn.Module):
-    def __init__(self, in_feats, hid_feats, out_feats, rel_names):
-        super().__init__()
-
-        self.conv1 = dglnn.HeteroGraphConv({
-            rel: dglnn.GraphConv(in_feats, hid_feats)
-            for rel in rel_names}, aggregate='sum')
-        self.conv2 = dglnn.HeteroGraphConv({
-            rel: dglnn.GraphConv(hid_feats, out_feats)
-            for rel in rel_names}, aggregate='sum')
-
-    def forward(self, graph, inputs):
-        # inputs are features of nodes
-        h = self.conv1(graph, inputs)
-        h = {k: F.relu(v) for k, v in h.items()}
-        h = self.conv2(graph, h)
-        return h
-
+"""
 class MLPPredictor(nn.Module):
     def __init__(self, in_features, out_classes):
         super().__init__()
@@ -47,6 +29,24 @@ class MLPPredictor(nn.Module):
             graph.apply_edges(self.apply_edges, etype=etype)
             return graph.edges[etype].data['score']
 
+class RGCN(nn.Module):
+    def __init__(self, in_feats, hid_feats, out_feats, rel_names):
+        super().__init__()
+
+        self.conv1 = dglnn.HeteroGraphConv({
+            rel: dglnn.GraphConv(in_feats, hid_feats)
+            for rel in rel_names}, aggregate='sum')
+        self.conv2 = dglnn.HeteroGraphConv({
+            rel: dglnn.GraphConv(hid_feats, out_feats)
+            for rel in rel_names}, aggregate='sum')
+
+    def forward(self, graph, inputs):
+        # inputs are features of nodes
+        h = self.conv1(graph, inputs)
+        h = {k: F.relu(v) for k, v in h.items()}
+        h = self.conv2(graph, h)
+        return h
+
 class HeteroDotProductPredictor(nn.Module):#this can be replaced by a more complicated neural network
     def forward(self, graph, h, etype):
         # h contains the node representations for each edge type computed from
@@ -65,12 +65,28 @@ class ReOrderingModel(nn.Module):
     def forward(self, g, x, etype):
         h = self.sage(g, x)
         return self.pred(g, h, etype)
+"""
+class RGCN(nn.Module):
+    def __init__(self, in_feats, hid_feats, out_feats, rel_names):
+        super().__init__()
 
+        self.conv1 = dglnn.HeteroGraphConv({
+            rel: dglnn.GraphConv(in_feats, hid_feats)
+            for rel in rel_names}, aggregate='sum')
+        self.conv2 = dglnn.HeteroGraphConv({
+            rel: dglnn.GraphConv(hid_feats, out_feats)
+            for rel in rel_names}, aggregate='sum')
+
+    def forward(self, graph, inputs):
+        # inputs are features of nodes
+        h = self.conv1(graph, inputs)
+        h = {k: F.relu(v) for k, v in h.items()}
+        h = self.conv2(graph, h)
+        return h
 
 class StochasticTwoLayerRGCN(nn.Module):
     def __init__(self, in_feat, hidden_feat, out_feat, rel_names):
         super().__init__()
-
         self.conv1 = dglnn.HeteroGraphConv({
                 rel : dglnn.GraphConv(in_feat, hidden_feat, norm='right')
                 for rel in rel_names
@@ -100,3 +116,16 @@ class ScorePredictor(nn.Module):
             for etype in edge_subgraph.canonical_etypes:
                 edge_subgraph.apply_edges(self.apply_edges, etype=etype)
             return edge_subgraph.edata['score']
+
+class GNNRankModel(nn.Module):
+    def __init__(self, in_features, hidden_features, out_features, num_classes, rel_names):
+        super().__init__()
+        self.gcn = StochasticTwoLayerGCN(
+            in_features, hidden_features, out_features, rel_names)
+        self.predictor = ScorePredictor(num_classes, out_features)
+
+    def forward(self, edge_subgraph, blocks, x):
+        x = self.gcn(blocks, x)
+        return self.predictor(edge_subgraph, x)
+
+#model = GNNRankModel(in_features, hidden_features, out_features, num_classes)

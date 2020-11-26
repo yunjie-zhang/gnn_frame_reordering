@@ -9,7 +9,7 @@ import random
 import dgl
 from torch.utils.data import Dataset, TensorDataset
 from torch.utils.data import DataLoader
-from model import ReOrderingModel
+#from model import ReOrderingModel
 from pytorchtools import EarlyStopping
 from dgl.data.utils import load_graphs
 import dgl.function as fn
@@ -44,6 +44,7 @@ def train(root_dir: str, meta_data_path: str, batch_size: int):
     if not torch.cuda.is_available():
         print("Not available.")
         exit()
+    epoch_cnt = 10
     torch.cuda.init()
     device_id = torch.cuda.current_device()
     print("Device: {}, ID: {}, Avalability: {}".format(torch.cuda.get_device_name(device_id), str(device_id), torch.cuda.is_available()))
@@ -69,13 +70,38 @@ def train(root_dir: str, meta_data_path: str, batch_size: int):
         shuffle=True,
         drop_last=False,
         num_workers=4)
-
+    """
     idx = 0
     for input_nodes, edge_subgraph, blocks in dataloader:
         for key in input_nodes.keys():
             print(key, input_nodes[key].size())
         print(len(input_nodes), len(blocks), idx)
         idx += 1
+    """
+    in_features = 1000
+    hidden_features = 512
+    out_features = 128
+    num_classes = 1
+    #model = GNNRankModel(in_features, hidden_features, out_features, num_classes)
+    #model = model.cuda()
+    opt = torch.optim.Adam(model.parameters())
+    for epoch in range(epoch_cnt):
+        print("Epoch {}".format(epoch))
+        for input_nodes, edge_subgraph, blocks in dataloader:
+            blocks = [b.to(torch.device('cuda')) for b in blocks]
+            edge_subgraph = edge_subgraph.to(torch.device('cuda'))
+
+            pic_feats = blocks[0].nodes['pic'].data['img_feat']
+            acc_feats = blocks[0].nodes['acc'].data['acc_feat']
+
+            #input_features = blocks[0].srcdata['features']
+            edge_labels = edge_subgraph.edata['label']
+            print(pic_feats.size(), acc_feats.size(), edge_labels.size())
+            #edge_predictions = model(edge_subgraph, blocks, input_features)
+            #loss = compute_loss(edge_labels, edge_predictions)
+            #opt.zero_grad()
+            #loss.backward()
+            #opt.step()
     exit()
 
 
