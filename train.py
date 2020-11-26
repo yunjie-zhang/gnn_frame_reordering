@@ -91,6 +91,7 @@ def train(root_dir: str, meta_data_path: str, batch_size: int):
     opt = torch.optim.Adam(model.parameters())
     for epoch in range(epoch_cnt):
         print("Epoch {}".format(epoch))
+        loss_list = []
         for input_nodes, edge_subgraph, blocks in dataloader:
             blocks = [b.to(torch.device('cuda')) for b in blocks]
             edge_subgraph = edge_subgraph.to(torch.device('cuda'))
@@ -106,16 +107,19 @@ def train(root_dir: str, meta_data_path: str, batch_size: int):
 
             node_features = {'pic': pic_feats, 'acc': acc_feats}
             edge_predictions = model(edge_subgraph, blocks, node_features)
-            print(type(edge_labels), type(edge_predictions))
+            #print(type(edge_labels), type(edge_predictions))
             #print(edge_labels[('pic', 'nb', 'pic')].size())
             #print(edge_predictions[('pic', 'nb', 'pic')].size())
             #edge_predictions = model(edge_subgraph, blocks, input_features)
             #loss = compute_loss(edge_labels, edge_predictions)
 
             loss = loss_fn(edge_predictions[('pic', 'nb', 'pic')], edge_labels[('pic', 'nb', 'pic')])
+            loss_list.append(loss.item())
             opt.zero_grad()
             loss.backward()
             opt.step()
+        avg_train_loss = sum(loss_list) / len(loss_list)
+        print("Epoch {}, loss {}".format(epoch, avg_train_loss))
     exit()
 
 
