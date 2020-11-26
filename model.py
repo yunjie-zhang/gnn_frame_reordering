@@ -115,7 +115,9 @@ class ScorePredictor(nn.Module):
         with edge_subgraph.local_scope():
             edge_subgraph.ndata['x'] = x
             #for etype in edge_subgraph.canonical_etypes:
+            print(x.size())
             edge_subgraph.apply_edges(self.apply_edges, etype='nb')
+            print(edge_subgraph.edata['score'].size())
             return edge_subgraph.edata['score']
 
 class GNNRankModel(nn.Module):

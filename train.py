@@ -107,8 +107,8 @@ def train(root_dir: str, meta_data_path: str, batch_size: int):
             node_features = {'pic': pic_feats, 'acc': acc_feats}
             edge_predictions = model(edge_subgraph, blocks, node_features)
             print(type(edge_labels), type(edge_predictions))
-            print(edge_labels[('pic', 'nb', 'pic')].size())
-            print(edge_predictions[('pic', 'nb', 'pic')].size())
+            #print(edge_labels[('pic', 'nb', 'pic')].size())
+            #print(edge_predictions[('pic', 'nb', 'pic')].size())
             #edge_predictions = model(edge_subgraph, blocks, input_features)
             #loss = compute_loss(edge_labels, edge_predictions)
 
