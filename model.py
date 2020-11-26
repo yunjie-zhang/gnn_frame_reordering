@@ -120,7 +120,7 @@ class ScorePredictor(nn.Module):
 class GNNRankModel(nn.Module):
     def __init__(self, in_features, hidden_features, out_features, num_classes, rel_names):
         super().__init__()
-        self.gcn = StochasticTwoLayerGCN(
+        self.gcn = StochasticTwoLayerRGCN(
             in_features, hidden_features, out_features, rel_names)
         self.predictor = ScorePredictor(num_classes, out_features)
 
