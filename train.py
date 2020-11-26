@@ -80,6 +80,8 @@ def train(root_dir: str, meta_data_path: str, batch_size: int):
         print(len(input_nodes), len(blocks), idx)
         idx += 1
     """
+    loss_fn = torch.nn.BCELoss()
+
     in_features = 1000
     hidden_features = 512
     out_features = 128
@@ -106,7 +108,8 @@ def train(root_dir: str, meta_data_path: str, batch_size: int):
             edge_predictions = model(edge_subgraph, blocks, node_features)
             print(type(edge_labels), type(edge_predictions))
             #edge_predictions = model(edge_subgraph, blocks, input_features)
-            loss = compute_loss(edge_labels, edge_predictions)
+            #loss = compute_loss(edge_labels, edge_predictions)
+            loss = loss_fn(edge_predictions['nb'], edge_labels['nb'])
             opt.zero_grad()
             loss.backward()
             opt.step()
