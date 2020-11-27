@@ -88,11 +88,11 @@ class StochasticTwoLayerRGCN(nn.Module):
     def __init__(self, in_feat, hidden_feat, out_feat, rel_names):
         super().__init__()
         self.conv1 = dglnn.HeteroGraphConv({
-                rel : dglnn.GraphConv(in_feat, hidden_feat, norm='right')
+                rel : dglnn.GraphConv(in_feat, hidden_feat, norm='right', aggregate='sum')
                 for rel in rel_names
             })
         self.conv2 = dglnn.HeteroGraphConv({
-                rel : dglnn.GraphConv(hidden_feat, out_feat, norm='right')
+                rel : dglnn.GraphConv(hidden_feat, out_feat, norm='right', aggregate='sum')
                 for rel in rel_names
             })
 
@@ -110,7 +110,7 @@ class ScorePredictor(nn.Module):
     def apply_edges(self, edges):
         data = torch.cat([edges.src['x'], edges.dst['x']], 1)
         #print(data.size())
-        return {'score': self.S(self.W(data))}
+        return {'score': torch.squeeze(self.S(self.W(data)))}
 
     def forward(self, edge_subgraph, x):
         with edge_subgraph.local_scope():
