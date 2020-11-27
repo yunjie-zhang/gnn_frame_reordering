@@ -44,7 +44,7 @@ def train(root_dir: str, meta_data_path: str, batch_size: int):
     if not torch.cuda.is_available():
         print("Not available.")
         exit()
-    epoch_cnt = 100
+    epoch_cnt = 200
     torch.cuda.init()
     device_id = torch.cuda.current_device()
     print("Device: {}, ID: {}, Avalability: {}".format(torch.cuda.get_device_name(device_id), str(device_id), torch.cuda.is_available()))
