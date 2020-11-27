@@ -69,14 +69,14 @@ def train(root_dir: str, meta_data_path: str, batch_size: int):
         g, train_eid_dict, sampler,
         #exclude='reverse_types',
         #reverse_etypes={'pb': 'blt'},
-        batch_size=64,
+        batch_size=batch_size,
         shuffle=True,
         drop_last=False,
         num_workers=4)
 
     test_dataloader = dgl.dataloading.EdgeDataLoader(
         g, test_eid_dict, sampler,
-        batch_size=64,
+        batch_size=batch_size,
         shuffle=True,
         drop_last=False,
         num_workers=4)
