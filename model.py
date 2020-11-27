@@ -88,11 +88,13 @@ class StochasticTwoLayerRGCN(nn.Module):
     def __init__(self, in_feat, hidden_feat, out_feat, rel_names):
         super().__init__()
         self.conv1 = dglnn.HeteroGraphConv({
-                rel : dglnn.GraphConv(in_feat, hidden_feat, norm='right', aggregate='sum')
+                rel : dglnn.GraphConv(in_feat, hidden_feat, norm='both',
+                                      weight=True, bias=True, activation=nn.LeakyReLU)
                 for rel in rel_names
             })
         self.conv2 = dglnn.HeteroGraphConv({
-                rel : dglnn.GraphConv(hidden_feat, out_feat, norm='right', aggregate='sum')
+                rel : dglnn.GraphConv(hidden_feat, out_feat, norm='both',
+                                      weight=True, bias=True, activation=nn.LeakyReLU)
                 for rel in rel_names
             })
 
