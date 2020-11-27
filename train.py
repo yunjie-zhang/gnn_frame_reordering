@@ -59,6 +59,7 @@ def train(root_dir: str, meta_data_path: str, batch_size: int):
     edge_num = g.num_edges('nb')
     train_edge_num = edge_num * 0.8
     train_eid_dict = {'nb': torch.arange(0, int(train_edge_num))}
+    test_eid_dict = {'nb': torch.arrange(int(train_edge_num), int(edge_num))}
     print(type(pic_feats), type(acc_feats))
     print(pic_feats.size())
     print(acc_feats.size())
@@ -72,6 +73,14 @@ def train(root_dir: str, meta_data_path: str, batch_size: int):
         shuffle=True,
         drop_last=False,
         num_workers=4)
+
+    test_dataloader = dgl.dataloading.EdgeDataLoader(
+        g, test_eid_dict, sampler,
+        batch_size=64,
+        shuffle=True,
+        drop_last=False,
+        num_workers=4)
+
     """
     idx = 0
     for input_nodes, edge_subgraph, blocks in dataloader:
@@ -89,6 +98,8 @@ def train(root_dir: str, meta_data_path: str, batch_size: int):
     model = GNNRankModel(in_features, hidden_features, out_features, num_classes, g.etypes)
     model = model.cuda()
     opt = torch.optim.Adam(model.parameters(), lr=0.001)
+    early_stopping = EarlyStopping(patience=5, verbose=True)
+
     for epoch in range(epoch_cnt):
         print("Epoch {}".format(epoch))
         loss_list = []
@@ -125,7 +136,30 @@ def train(root_dir: str, meta_data_path: str, batch_size: int):
             opt.step()
         avg_train_loss = sum(loss_list) / len(loss_list)
         avg_train_acc = sum(acc_list) / len(acc_list)
-        print("Epoch {}, loss {}, acc {}.".format(epoch, avg_train_loss, avg_train_acc))
+
+        acc_list = []
+        for input_nodes, edge_subgraph, blocks in test_dataloader:
+            blocks = [b.to(torch.device('cuda')) for b in blocks]
+            edge_subgraph = edge_subgraph.to(torch.device('cuda'))
+
+            pic_feats = blocks[0].nodes['pic'].data['img_feat']
+            acc_feats = blocks[0].nodes['acc'].data['acc_feat']
+
+            edge_labels = edge_subgraph.edata['label']
+
+            node_features = {'pic': pic_feats, 'acc': acc_feats}
+            edge_predictions = model(edge_subgraph, blocks, node_features)
+
+            acc = calculate_acc(edge_predictions[('pic', 'nb', 'pic')], edge_labels[('pic', 'nb', 'pic')])
+            acc_list.append(acc)
+        avg_test_acc = sum(acc_list) / len(acc_list)
+
+        print("Epoch {}, train loss {}, train acc {}, test acc {}.".format(epoch, avg_train_loss, avg_train_acc, avg_test_acc))
+        early_stopping(avg_test_acc, model)
+
+        if early_stopping.early_stop:
+            print("Early stopping")
+            break
     exit()
 
 
