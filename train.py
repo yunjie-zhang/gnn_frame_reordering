@@ -44,7 +44,7 @@ def train(root_dir: str, meta_data_path: str, batch_size: int):
     if not torch.cuda.is_available():
         print("Not available.")
         exit()
-    epoch_cnt = 10
+    epoch_cnt = 100
     torch.cuda.init()
     device_id = torch.cuda.current_device()
     print("Device: {}, ID: {}, Avalability: {}".format(torch.cuda.get_device_name(device_id), str(device_id), torch.cuda.is_available()))
@@ -155,11 +155,12 @@ def train(root_dir: str, meta_data_path: str, batch_size: int):
         avg_test_acc = sum(acc_list) / len(acc_list)
 
         print("Epoch {}, train loss {}, train acc {}, test acc {}.".format(epoch, avg_train_loss, avg_train_acc, avg_test_acc))
-        early_stopping(avg_test_acc, model)
+        early_stopping((1 - avg_test_acc), model)
 
         if early_stopping.early_stop:
             print("Early stopping")
             break
+    torch.save(model.state_dict(), "./test_saving_model.pt")
     exit()
 
 
