@@ -150,7 +150,7 @@ def makePicPair(total_cnt, interval, ratio):
 
     pair_cnt = len(pair_list)
     print("A total of {} pairs.".format(pair_cnt))
-    ret_torch = torch.tensor(pair_list, dtype=torch.int)
+    ret_torch = torch.tensor(pair_list, dtype=torch.int32)
     ret_torch = torch.transpose(ret_torch, 0, 1)
 
     label_torch = torch.tensor(label_list, dtype=torch.float)
@@ -247,11 +247,11 @@ def makeAccPair(account2video, video_name2idx):
         acc_idx2pic_list.append([acc_idx, pic_idx])
         pic2acc_idx_list.append([pic_idx, acc_idx])
 
-    ret_torch_1 = torch.tensor(acc_idx2pic_list, dtype=torch.int)
+    ret_torch_1 = torch.tensor(acc_idx2pic_list, dtype=torch.int32)
     ret_torch_1 = torch.transpose(ret_torch_1, 0, 1)
     print("Size of torch tensor is {}".format(ret_torch_1.shape))
 
-    ret_torch_2 = torch.tensor(pic2acc_idx_list, dtype=torch.int)
+    ret_torch_2 = torch.tensor(pic2acc_idx_list, dtype=torch.int32)
     ret_torch_2 = torch.transpose(ret_torch_2, 0, 1)
     print("Size of torch tensor is {}".format(ret_torch_2.shape))
 
