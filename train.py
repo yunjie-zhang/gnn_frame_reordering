@@ -65,7 +65,7 @@ def train(root_dir: str, meta_data_path: str, batch_size: int):
     print(acc_feats.size())
 
     #sampler = dgl.dataloading.MultiLayerFullNeighborSampler(2)
-    sampler = dgl.dataloading.MultiLayerNeighborSampler([5, 10, 10])
+    sampler = dgl.dataloading.MultiLayerNeighborSampler([8, 8, 8])
     dataloader = dgl.dataloading.EdgeDataLoader(
         g, train_eid_dict, sampler,
         #exclude='reverse_types',
