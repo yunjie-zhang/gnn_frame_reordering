@@ -73,14 +73,14 @@ def train(root_dir: str, meta_data_path: str, batch_size: int):
         batch_size=batch_size,
         shuffle=True,
         drop_last=False,
-        num_workers=4)
+        num_workers=1)
 
     test_dataloader = dgl.dataloading.EdgeDataLoader(
         g, test_eid_dict, sampler,
         batch_size=batch_size,
         shuffle=True,
         drop_last=False,
-        num_workers=4)
+        num_workers=1)
 
     """
     idx = 0
