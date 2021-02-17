@@ -106,8 +106,8 @@ def train(root_dir: str, meta_data_path: str, batch_size: int):
         loss_list = []
         acc_list = []
         for input_nodes, edge_subgraph, blocks in dataloader:
-            blocks = [b.to(torch.device('cuda')) for b in blocks]
-            edge_subgraph = edge_subgraph.to(torch.device('cuda'))
+            #blocks = [b.to(torch.device('cuda')) for b in blocks]
+            #edge_subgraph = edge_subgraph.to(torch.device('cuda'))
 
             pic_feats = blocks[0].nodes['pic'].data['img_feat']
             acc_feats = blocks[0].nodes['acc'].data['acc_feat']
@@ -143,8 +143,8 @@ def train(root_dir: str, meta_data_path: str, batch_size: int):
             blocks = [b.to(torch.device('cuda')) for b in blocks]
             edge_subgraph = edge_subgraph.to(torch.device('cuda'))
 
-            pic_feats = blocks[0].nodes['pic'].data['img_feat']
-            acc_feats = blocks[0].nodes['acc'].data['acc_feat']
+            #pic_feats = blocks[0].nodes['pic'].data['img_feat']
+            #acc_feats = blocks[0].nodes['acc'].data['acc_feat']
 
             edge_labels = edge_subgraph.edata['label']
 
