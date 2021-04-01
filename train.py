@@ -37,9 +37,11 @@ def calculate_acc(y_pred, y_test):
     acc = correct_results_sum / y_test.shape[0]
     return acc
 def train(root_dir: str, meta_data_path: str, batch_size: int):
+    """
     if not torch.cuda.is_available():
         print("Not available.")
         exit()
+    """
     epoch_cnt = 200
     torch.cuda.init()
     device_id = torch.cuda.current_device()
