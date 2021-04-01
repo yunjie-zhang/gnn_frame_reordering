@@ -45,9 +45,9 @@ def train(root_dir: str, meta_data_path: str, batch_size: int):
         print("Not available.")
         exit()
     epoch_cnt = 200
-    #torch.cuda.init()
-    #device_id = torch.cuda.current_device()
-    #print("Device: {}, ID: {}, Avalability: {}".format(torch.cuda.get_device_name(device_id), str(device_id), torch.cuda.is_available()))
+    torch.cuda.init()
+    device_id = torch.cuda.current_device()
+    print("Device: {}, ID: {}, Avalability: {}".format(torch.cuda.get_device_name(device_id), str(device_id), torch.cuda.is_available()))
     glist, label_dict = load_graphs("./test_data.bin")
     print(type(glist), type(label_dict))
     print(len(glist))
@@ -97,7 +97,7 @@ def train(root_dir: str, meta_data_path: str, batch_size: int):
     out_features = 128
     num_classes = 1
     model = GNNRankModel(in_features, hidden_features, out_features, num_classes, g.etypes)
-    #model = model.cuda()
+    model = model.cuda()
     opt = torch.optim.Adam(model.parameters(), lr=0.001)
     early_stopping = EarlyStopping(patience=5, verbose=True)
 
@@ -106,8 +106,8 @@ def train(root_dir: str, meta_data_path: str, batch_size: int):
         loss_list = []
         acc_list = []
         for input_nodes, edge_subgraph, blocks in dataloader:
-            #blocks = [b.to(torch.device('cuda')) for b in blocks]
-            #edge_subgraph = edge_subgraph.to(torch.device('cuda'))
+            blocks = [b.to(torch.device('cuda')) for b in blocks]
+            edge_subgraph = edge_subgraph.to(torch.device('cuda'))
 
             pic_feats = blocks[0].nodes['pic'].data['img_feat']
             acc_feats = blocks[0].nodes['acc'].data['acc_feat']
