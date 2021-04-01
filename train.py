@@ -223,3 +223,12 @@ def train(root_dir: str, meta_data_path: str, batch_size: int):
             print("Early stopping")
             break
     torch.save(rank_model.state_dict(), "./test_saving_model.pt")
+    
+def transform(snippet):
+    ''' stack & noralization '''
+    snippet = np.concatenate(snippet, axis=-1)
+    snippet = torch.from_numpy(snippet).permute(2, 0, 1).contiguous().float()
+    snippet = snippet.mul_(2.).sub_(255).div(255)
+    return snippet.view(1,-1,3,snippet.size(1),snippet.size(2)).permute(0,2,1,3,4)
+if __name__ == '__main__':
+    train(sys.argv[1],sys.argv[2], int(sys.argv[3]))
