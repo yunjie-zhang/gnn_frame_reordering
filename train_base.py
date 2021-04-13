@@ -87,8 +87,31 @@ def train_single_w_rank(data_path: str, initial_weights_path: str, save_weights_
     image_features_r_train = np.load("img_feature_right_train.npy")
     info_features_train = np.load("account_feature_train.npy")
     target_train = np.load("target_train.npy")
-    rank_model.fit([[image_features_l_train, info_features_train],[image_features_r_train, info_features_train]], target_train, verbose=1, batch_size=4, epochs=1, callbacks=[])
     
+    train_index = int(len(target_train) * 0.95)
+    
+    image_features_l_dev = image_features_l_train[train_index:]
+    image_features_r_dev = image_features_r_train[train_index:]
+    info_features_dev = info_features_train[train_index:]
+    target_dev = target_train[train_index:]
+    
+    image_features_l_train = image_features_l_train[0: train_index]
+    image_features_r_train = image_features_r_train[0: train_index]
+    info_features_train = info_features_train[0: train_index]
+    target_train = target_train[0: train_index]
+    
+    
+    
+    rank_model.fit([[image_features_l_train, info_features_train],[image_features_r_train, info_features_train]], 
+                   target_train, verbose=1, batch_size=4, epochs=1, callbacks=[], 
+                   validation_data=([[image_features_l_dev, info_features_dev],[image_features_r_dev, info_features_dev]], target_dev))
+    
+    image_features_l_test = np.load("img_feature_left_test.npy")
+    image_features_r_test = np.load("img_feature_right_test.npy")
+    info_features_test = np.load("account_feature_test.npy")
+    target_test = np.load("target_test.npy")
+    results = rank_model.evaluate([[image_features_l_test, info_features_test],[image_features_r_test, info_features_test]], target_test, batch_size=128)
+    print("Result: ", results)
     
 if __name__ == "__main__":
     train_single_w_rank("a", "a", "a", 1)
