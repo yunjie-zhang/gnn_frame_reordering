@@ -109,7 +109,7 @@ def train(root_dir: str, meta_data_path: str, batch_size: int):
             #print(edge_predictions[('pic', 'nb', 'pic')].size())
             #edge_predictions = model(edge_subgraph, blocks, input_features)
             #loss = compute_loss(edge_labels, edge_predictions)
-            loss = loss_fn(edge_predictions[('pic', 'nb', 'pic')], edge_labels[('pic', 'nb', 'pic')])
+            loss = loss_fn(edge_predictions, edge_labels)
             loss_list.append(loss.item())
             acc = calculate_acc(edge_predictions[('pic', 'nb', 'pic')], edge_labels[('pic', 'nb', 'pic')])
             loss_list.append(loss)
@@ -127,7 +127,7 @@ def train(root_dir: str, meta_data_path: str, batch_size: int):
             edge_labels = edge_subgraph.edata['label']
             node_features = {'pic': pic_feats}
             edge_predictions = model(edge_subgraph, blocks, node_features)
-            acc = calculate_acc(edge_predictions[('pic', 'nb', 'pic')], edge_labels[('pic', 'nb', 'pic')])
+            acc = calculate_acc(edge_predictions, edge_labels)
             acc_list.append(acc)
         avg_test_acc = sum(acc_list) / len(acc_list)
         print("Epoch {}, train loss {}, train acc {}, test acc {}.".format(epoch, avg_train_loss, avg_train_acc, avg_test_acc))
