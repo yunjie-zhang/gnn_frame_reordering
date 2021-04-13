@@ -9,7 +9,7 @@ import random
 import dgl
 from torch.utils.data import Dataset, TensorDataset
 from torch.utils.data import DataLoader
-from model_wo_acc import GNNRankModel
+from model import GNNRankModel
 from pytorchtools import EarlyStopping
 from dgl.data.utils import load_graphs
 import dgl.function as fn
