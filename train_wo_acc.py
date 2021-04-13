@@ -83,7 +83,7 @@ def train(root_dir: str, meta_data_path: str, batch_size: int):
         idx += 1
     """
     loss_fn = torch.nn.BCELoss()
-    in_features = 1000
+    in_features = 2000
     hidden_features = 512
     out_features = 128
     num_classes = 1
