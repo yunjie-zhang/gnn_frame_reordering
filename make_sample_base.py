@@ -313,6 +313,12 @@ def make_base(tsv_path:str, feature_path: str):
                     if cat_2 in cat_map:
                         cat_vec[cat_map[cat_2]] = 1.0
                     account_feature.append(cat_vec)
+                    
+    np.random.seed(666) 
+    np.random.shuffle(img_feature_left_np) 
+    np.random.shuffle(img_feature_right_np) 
+    np.random.shuffle(account_feature_np) 
+    np.random.shuffle(target_np) 
     img_feature_left_np = np.asarray(img_feature_left, dtype=np.float32)
     img_feature_right_np = np.asarray(img_feature_right, dtype=np.float32)
     account_feature_np = np.asarray(account_feature, dtype=np.float32)
@@ -321,6 +327,10 @@ def make_base(tsv_path:str, feature_path: str):
     print(img_feature_right_np.shape)
     print(account_feature_np.shape)   
     print(target_np.shape)
-        
+    np.save(img_feature_left_np, "img_feature_left.npy")
+    np.save(img_feature_right_np, "img_feature_right.npy")
+    np.save(account_feature_np, "account_feature.npy")
+    np.save(target_np, "target.npy")
+
 if __name__=="__main__":
     make_base(sys.argv[1], sys.argv[2])
