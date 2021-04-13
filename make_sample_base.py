@@ -303,7 +303,7 @@ def make_base(tsv_path:str, feature_path: str):
                         
                     cat_vec = np.zeros(1000)
                     fields = account_info.split('_')
-
+                    print(account_info)
                     cat_0 = fields[0]
                     cat_1 = fields[1]
                     cat_2 = fields[2]
