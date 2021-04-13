@@ -78,7 +78,7 @@ def train_single_w_rank(data_path: str, initial_weights_path: str, save_weights_
     rank_model = Model([[frame_input_l, info_input_l], [frame_input_r, info_input_r]], prob)
 
     rank_model.summary()
-    adamopt = tf.keras.optimizers.Adam(learning_rate=0.0001, beta_1=0.9, beta_2=0.999, epsilon=1e-07)
+    adamopt = tf.keras.optimizers.Adam(learning_rate=0.01, beta_1=0.9, beta_2=0.999, epsilon=1e-07)
     sgd = tf.keras.optimizers.SGD(learning_rate=0.01, momentum=0.0)
 
     rank_model.compile(optimizer=adamopt, loss=['BinaryCrossentropy'], metrics=["accuracy"])
