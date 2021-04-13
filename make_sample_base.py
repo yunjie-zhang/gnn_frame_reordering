@@ -307,9 +307,12 @@ def make_base(tsv_path:str, feature_path: str):
                     cat_0 = fields[0]
                     cat_1 = fields[1]
                     cat_2 = fields[2]
-                    cat_vec[cat_map[cat_0]] = 1.0
-                    cat_vec[cat_map[cat_1]] = 1.0
-                    cat_vec[cat_map[cat_2]] = 1.0
+                    if cat_0 in cat_map:
+                        cat_vec[cat_map[cat_0]] = 1.0
+                    if cat_1 in cat_map:
+                        cat_vec[cat_map[cat_1]] = 1.0
+                    if cat_2 in cat_map:
+                        cat_vec[cat_map[cat_2]] = 1.0
                     account_feature.append(cat_vec)
     img_feature_left_np = np.asarray(img_feature_left, dtype=np.float32)
     img_feature_right_np = np.asarray(img_feature_right, dtype=np.float32)
