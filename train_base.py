@@ -85,10 +85,9 @@ def train_single_w_rank(data_path: str, initial_weights_path: str, save_weights_
     
     image_features_l_train = np.load("img_feature_left_train.npy")
     image_features_r_train = np.load("img_feature_right_train.npy")
-    info_features_l_train = np.load("account_feature_left_train.npy")
-    info_features_r_train = np.load("account_feature_right_train.npy")
+    info_features_train = np.load("account_feature_train.npy")
     target_train = np.load("target_train.npy")
-    rank_model.fit([[image_features_l_train, info_features_l_train],[image_features_r_train, info_features_r_train]], target_train, verbose=1, batch_size=4, epochs=1, callbacks=[])
+    rank_model.fit([[image_features_l_train, info_features_train],[image_features_r_train, info_features_train]], target_train, verbose=1, batch_size=4, epochs=1, callbacks=[])
     
     
 if __name__ == "__main__":
