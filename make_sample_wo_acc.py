@@ -324,26 +324,19 @@ def make_graph(tsv_path:str, feature_path: str):
     g.edges['nb'].data['label'] = label_torch
     g.edges['nb'].data['train_mask'] = train_mask_torch
 
+    cat_0_set = set()
+    cat_1_set = set()
+    cat_2_set = set()   
+ 
     for i in range(pic_node_num):
         video_name = idx2video_name[i]
         feat_offset = i % FRAME_CNT
-        video_info = video_name2info[video_name]
+        account_info = video_name2info[video_name]
         video_feature = np.load(os.path.join(feature_path, video_name + ".npy"))
         cur_frame_feature = video_feature[feat_offset]
         cur_frame_feature_th = torch.from_numpy(cur_frame_feature)
         info_feature = torch.zeros(1000)
-        pic_node_feature = torch.cat((cur_frame_feature_th, info_feature), -1)
-        g.nodes['pic'].data['img_feat'][i] = pic_node_feature
-
-    cat_0_set = set()
-    cat_1_set = set()
-    cat_2_set = set()
-
-    for j in range(acc_node_num):
-        account_id = idx2account[j]
-        account_info = account2info[account_id]
         fields = account_info.split('_')
-
         cat_0 = fields[0]
         cat_1 = fields[1]
         cat_2 = fields[2]
@@ -353,11 +346,16 @@ def make_graph(tsv_path:str, feature_path: str):
         cat_2_set.add(cat_2)
 
         if cat_0 in cat_map:
-            g.nodes['acc'].data['acc_feat'][j][cat_map[cat_0]] = 1.0
+            info_feature[cat_map[cat_0]] = 1.0
         if cat_1 in cat_map:
-            g.nodes['acc'].data['acc_feat'][j][cat_map[cat_1]] = 1.0
+            info_feature[cat_map[cat_1]] = 1.0
         if cat_2 in cat_map:
-            g.nodes['acc'].data['acc_feat'][j][cat_map[cat_2]] = 1.0
+            info_feature[cat_map[cat_2]] = 1.0
+        pic_node_feature = torch.cat((cur_frame_feature_th, info_feature), -1)
+        
+        
+        g.nodes['pic'].data['img_feat'][i] = pic_node_feature
+
 
     cat_0_list = list(cat_0_set)
     cat_1_list = list(cat_1_set)
