@@ -103,7 +103,7 @@ def train_single_w_rank(data_path: str, initial_weights_path: str, save_weights_
     
     
     rank_model.fit([[image_features_l_train, info_features_train],[image_features_r_train, info_features_train]], 
-                   target_train, verbose=1, batch_size=4, epochs=1, callbacks=[], 
+                   target_train, verbose=1, batch_size=16, epochs=1, callbacks=[], 
                    validation_data=([[image_features_l_dev, info_features_dev],[image_features_r_dev, info_features_dev]], target_dev))
     
     image_features_l_test = np.load("img_feature_left_test.npy")
