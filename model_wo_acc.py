@@ -120,7 +120,16 @@ class ScorePredictor(nn.Module):
             #for etype in edge_subgraph.canonical_etypes:
             edge_subgraph.apply_edges(self.apply_edges, etype='nb')
             return edge_subgraph.edata['score']
-
+        
+class DotProductPredictor(nn.Module):
+    def forward(self, graph, h):
+        # h contains the node representations computed from the GNN defined
+        # in the node classification section (Section 5.1).
+        with graph.local_scope():
+            graph.ndata['h'] = h
+            graph.apply_edges(fn.u_dot_v('h', 'h', 'score'))
+            return graph.edata['score']
+        
 class GNNRankModel(nn.Module):
     def __init__(self, in_features, hidden_features, out_features, num_classes, rel_names):
         super().__init__()
