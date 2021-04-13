@@ -279,10 +279,11 @@ def make_base(tsv_path:str, feature_path: str):
     print("A total of {} videos found.".format(len(video_name_list)))
     
     for account_str in account2video.keys():
-        video_name_str = account2video[account_str]
+        video_name_list = account2video[account_str]
         account2info = account2video[account_str]
-        video_feature = np.load(os.path.join(feature_path, video_name_str + ".npy"))
-        print(video_feature.shape)
+        for video_name_str in video_name_list:
+            video_feature = np.load(os.path.join(feature_path, video_name_str + ".npy"))
+            print(video_feature.shape)
         
 if __name__=="__main__":
     make_base(sys.argv[1], sys.argv[2])
