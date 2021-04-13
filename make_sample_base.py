@@ -328,10 +328,10 @@ def make_base(tsv_path:str, feature_path: str):
     print(img_feature_right_np.shape)
     print(account_feature_np.shape)   
     print(target_np.shape)
-    np.save(img_feature_left_np, "img_feature_left.npy")
-    np.save(img_feature_right_np, "img_feature_right.npy")
-    np.save(account_feature_np, "account_feature.npy")
-    np.save(target_np, "target.npy")
+    np.save("img_feature_left.npy", img_feature_left_np)
+    np.save("img_feature_right.npy", img_feature_right_np)
+    np.save("account_feature.npy", account_feature_np)
+    np.save("target.npy", target_np)
 
 if __name__=="__main__":
     make_base(sys.argv[1], sys.argv[2])
