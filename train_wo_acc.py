@@ -110,7 +110,7 @@ def train(root_dir: str, meta_data_path: str, batch_size: int):
             #edge_predictions = model(edge_subgraph, blocks, input_features)
             #loss = compute_loss(edge_labels, edge_predictions)
             loss = loss_fn(edge_predictions, edge_labels)
-            loss_list.append(loss.item())
+            #loss_list.append(loss.item())
             acc = calculate_acc(edge_predictions, edge_labels)
             loss_list.append(loss)
             acc_list.append(acc)
