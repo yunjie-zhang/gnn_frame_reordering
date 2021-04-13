@@ -314,15 +314,16 @@ def make_base(tsv_path:str, feature_path: str):
                         cat_vec[cat_map[cat_2]] = 1.0
                     account_feature.append(cat_vec)
                     
+
+    img_feature_left_np = np.asarray(img_feature_left, dtype=np.float32)
+    img_feature_right_np = np.asarray(img_feature_right, dtype=np.float32)
+    account_feature_np = np.asarray(account_feature, dtype=np.float32)
+    target_np = np.asarray(target, dtype=np.float32)
     np.random.seed(666) 
     np.random.shuffle(img_feature_left_np) 
     np.random.shuffle(img_feature_right_np) 
     np.random.shuffle(account_feature_np) 
     np.random.shuffle(target_np) 
-    img_feature_left_np = np.asarray(img_feature_left, dtype=np.float32)
-    img_feature_right_np = np.asarray(img_feature_right, dtype=np.float32)
-    account_feature_np = np.asarray(account_feature, dtype=np.float32)
-    target_np = np.asarray(target, dtype=np.float32)
     print(img_feature_left_np.shape)
     print(img_feature_right_np.shape)
     print(account_feature_np.shape)   
