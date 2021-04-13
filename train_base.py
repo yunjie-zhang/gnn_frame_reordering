@@ -17,8 +17,8 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "2"
 
 class baseline_model(object):
     def __init__(self, img_num=8):
-        self.frame_shape = 1000
-        self.info_shape = 1000
+        self.frame_shape = (1000)
+        self.info_shape = (1000)
     def construct(self):
         frame_shape = self.frame_shape
         info_shape = self.info_shape
@@ -48,4 +48,40 @@ class baseline_model(object):
         #        config = avc.get_config()
         #        new_model = keras.Model.from_config(config)
         return fr_model
+    
+def train_single_w_rank(data_path: str, initial_weights_path: str, save_weights_path: str, batch_size: int):
+    #batch_size = 16
+    epochs_1st = 200
 
+    gpu_n = 1  # gpu number
+
+    model_base = baseline_model()
+
+    model_single = model_base.construct()
+    frame_shape = (1000)
+    info_shape = (1000)
+
+    frame_input_l = Input(shape=frame_shape)
+    info_input_l = Input(shape=info_shape)
+    frame_input_r = Input(shape=frame_shape)
+    info_input_r = Input(shape=info_shape)
+
+    l_out = model_single([frame_input_l, info_input_l])
+    r_out = model_single([frame_input_r, info_input_r])
+    #diff = Subtract()([l_out, r_out])
+    #prob = dense_diff(diff)
+    #rank_model = Model([frame_input_l, frame_input_r], prob)
+    diff = Subtract()([l_out, r_out])
+    diff = diff * 0.5
+    b = tf.constant(0.5, shape=(1,))
+    prob = tf.keras.layers.Add()([diff, b])
+    rank_model = Model([[frame_input_l, info_input_l], [frame_input_r, info_input_r]], prob)
+
+    rank_model.summary()
+    adamopt = tf.keras.optimizers.Adam(learning_rate=0.0001, beta_1=0.9, beta_2=0.999, epsilon=1e-07)
+    sgd = tf.keras.optimizers.SGD(learning_rate=0.01, momentum=0.0)
+
+    rank_model.compile(optimizer=adamopt, loss=['BinaryCrossentropy'], metrics=["accuracy"])
+    
+if __name__ == "__main__":
+    train_single_w_rank("a", "a", "a", 1)
