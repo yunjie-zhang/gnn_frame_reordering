@@ -282,25 +282,29 @@ def make_base(tsv_path:str, feature_path: str):
     img_feature_right = []
     account_feature = []
     target = []
-    
+    print_cnt = 0
     for account_str in account2video.keys():
         video_name_list = account2video[account_str]
         account_info = account2info[account_str]
         for video_name_str in video_name_list:
+            print_cnt += 1
             video_feature = np.load(os.path.join(feature_path, video_name_str + ".npy"))
             for i in range(8):
                 for j in range(i + 1, 8):
                 #get random integer
                     dummy = random.randint(0, 1)
+                    cur_target = 0.0
                     if (dummy % 2) == 0:
                         img_feature_left.append(video_feature[i])
                         img_feature_right.append(video_feature[j])
-                        target.append(1.0)
+                        cur_target = 1.0
                     else:
                         img_feature_left.append(video_feature[j])
                         img_feature_right.append(video_feature[i])
-                        target.append(0.0)
-                        
+                        cur_target = 0.0
+                    target.append(cur_target)
+                    if(print_cnt <= 50):
+                        print(cur_target)
                     cat_vec = np.zeros(1000)
                     fields = account_info.split('_')
                     cat_0 = fields[0]
