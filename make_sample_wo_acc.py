@@ -282,7 +282,7 @@ def make_graph(tsv_path:str, feature_path: str):
     video_name2info = dict()
     
     for acc in account2video.keys():
-        account_info = account2video[acc]
+        account_info = account2info[acc]
         video_list = account2video[acc]
         for video_name in video_list:
             video_name2info[video_name] = account_info
