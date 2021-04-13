@@ -332,7 +332,7 @@ def make_graph(tsv_path:str, feature_path: str):
         cur_frame_feature = video_feature[feat_offset]
         cur_frame_feature_th = torch.from_numpy(cur_frame_feature)
         info_feature = torch.zeros(1000)
-        pic_node_feature = torch.cat((cur_frame_feature_th, info_feature), 1)
+        pic_node_feature = torch.cat((cur_frame_feature_th, info_feature), -1)
         g.nodes['pic'].data['img_feat'][i] = pic_node_feature
 
     cat_0_set = set()
