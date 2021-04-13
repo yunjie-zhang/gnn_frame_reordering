@@ -68,13 +68,15 @@ def train_single_w_rank(data_path: str, initial_weights_path: str, save_weights_
 
     l_out = model_single([frame_input_l, info_input_l])
     r_out = model_single([frame_input_r, info_input_r])
+    dense_diff = Dense(1, activation="sigmoid", name="diff_output")
     #diff = Subtract()([l_out, r_out])
     #prob = dense_diff(diff)
     #rank_model = Model([frame_input_l, frame_input_r], prob)
     diff = Subtract()([l_out, r_out])
-    diff = diff * 0.5
-    b = tf.constant(0.5, shape=(1,))
-    prob = tf.keras.layers.Add()([diff, b])
+    #diff = diff * 0.5
+    #b = tf.constant(0.5, shape=(1,))
+    #prob = tf.keras.layers.Add()([diff, b])
+    prob = dense_diff(diff)
     rank_model = Model([[frame_input_l, info_input_l], [frame_input_r, info_input_r]], prob)
 
     rank_model.summary()
