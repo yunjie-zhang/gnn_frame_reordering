@@ -303,7 +303,7 @@ def make_graph(tsv_path:str, feature_path: str):
     ret_pic_node, label_torch, train_mask_torch = makePicPair(video_cnt, FRAME_CNT, 0.9)#who connects whom, who leads whom, training label
 
     g = dgl.heterograph({('pic', 'nb', 'pic'): (ret_pic_node[0], ret_pic_node[1]), #neighbor
-                         ('acc', 'pb', 'pic'): (ret_acc2pic_node[0], ret_acc2pic_node[1])) #belongs to
+                         ('acc', 'pb', 'pic'): (ret_acc2pic_node[0], ret_acc2pic_node[1])}) #belongs to
     #g = dgl.heterograph({('pic', 'nb', 'pic'):(torch.tensor([0, 0, 2]), torch.tensor([1, 2, 3])), ('acc', 'own', 'pic'):(torch.tensor([0, 1, 0]), torch.tensor([1, 2, 3]))})
     pic_node_num = g.num_nodes('pic')
     acc_node_num = g.num_nodes('acc')
