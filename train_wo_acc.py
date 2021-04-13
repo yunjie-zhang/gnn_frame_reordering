@@ -103,7 +103,7 @@ def train(root_dir: str, meta_data_path: str, batch_size: int):
             edge_num = edge_subgraph.num_edges('nb')
             edge_labels = edge_subgraph.edata['label']
             node_features = {'pic': pic_feats}
-            edge_predictions = model(edge_subgraph, blocks, node_features)
+            edge_predictions = model(edge_subgraph, blocks, pic_feats)
             #print(type(edge_labels), type(edge_predictions))
             #print(edge_labels[('pic', 'nb', 'pic')].size())
             #print(edge_predictions[('pic', 'nb', 'pic')].size())
