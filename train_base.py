@@ -1,7 +1,7 @@
 import sys, os
 import numpy as np
 import tensorflow as tf
-from tensorflow.keras.layers import Input, Maximum, Average, Minimum, Dense, TimeDistributed, LSTM, Dropout
+from tensorflow.keras.layers import Subtract, Input, Maximum, Average, Minimum, Dense, TimeDistributed, LSTM, Dropout
 from tensorflow.keras.backend import concatenate
 from tensorflow.keras.models import load_model, Model
 from tensorflow.keras.layers import GlobalAveragePooling2D
@@ -9,7 +9,6 @@ from keras.utils import plot_model
 from tensorflow.keras.backend import stack
 from tensorflow import keras
 from tensorflow.keras.callbacks import Callback
-from tensorflow.keras.layers import Subtract,Dense,Input
 
 import keras.backend as K
 
