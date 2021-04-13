@@ -278,12 +278,47 @@ def make_base(tsv_path:str, feature_path: str):
     print("A total of {} accounts found.".format(len(account2info)))
     print("A total of {} videos found.".format(len(video_name_list)))
     
+    img_feature_left = []
+    img_feature_right = []
+    account_feature = []
+    target = []
+    
     for account_str in account2video.keys():
         video_name_list = account2video[account_str]
-        account2info = account2video[account_str]
+        account_info = account2video[account_str]
         for video_name_str in video_name_list:
             video_feature = np.load(os.path.join(feature_path, video_name_str + ".npy"))
-            print(video_feature.shape)
+            for i in range(8):
+                for j in range(i + 1, 8):
+                #get random integer
+                    dummy = random.randint(0, 1)
+                    if (dummy % 2) == 0:
+                        img_feature_left.append(video_feature[i])
+                        img_feature_right.append(video_feature[j])
+                        target.append(1.0)
+                    else:
+                        img_feature_left.append(video_feature[j])
+                        img_feature_right.append(video_feature[i])
+                        target.append(0.0)
+                        
+                    cat_vec = np.zeros(1000)
+                    fields = account_info.split('_')
+
+                    cat_0 = fields[0]
+                    cat_1 = fields[1]
+                    cat_2 = fields[2]
+                    cat_vec[cat_map[cat_0]] = 1.0
+                    cat_vec[cat_map[cat_1]] = 1.0
+                    cat_vec[cat_map[cat_2]] = 1.0
+                    account_feature.append(cat_vec)
+    img_feature_left_np = np.asarray(img_feature_left, dtype=np.float32)
+    img_feature_right_np = np.asarray(img_feature_right, dtype=np.float32)
+    account_feature_np = np.asarray(account_feature, dtype=np.float32)
+    target_np = np.asarray(target, dtype=np.float32)
+    print(img_feature_left_np.shape)
+    print(img_feature_right_np.shape)
+    print(account_feature_np.shape)   
+    print(target_np.shape)
         
 if __name__=="__main__":
     make_base(sys.argv[1], sys.argv[2])
