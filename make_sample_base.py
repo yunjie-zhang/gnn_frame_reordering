@@ -315,23 +315,42 @@ def make_base(tsv_path:str, feature_path: str):
                     account_feature.append(cat_vec)
                     
 
-    img_feature_left_np = np.asarray(img_feature_left, dtype=np.float32)
-    img_feature_right_np = np.asarray(img_feature_right, dtype=np.float32)
-    account_feature_np = np.asarray(account_feature, dtype=np.float32)
-    target_np = np.asarray(target, dtype=np.float32)
+    total_len = len(img_feature_left)
+    train_idx = int(0.9 * total_len)
+    
+    img_feature_left_train_np = np.asarray(img_feature_left[0: train_idx], dtype=np.float32)
+    img_feature_right_train_np = np.asarray(img_feature_right[0: train_idx], dtype=np.float32)
+    account_feature_train_np = np.asarray(account_feature[0: train_idx], dtype=np.float32)
+    target_train_np = np.asarray(target[0: train_idx], dtype=np.float32)
+    
+    img_feature_left_test_np = np.asarray(img_feature_left[train_idx: ], dtype=np.float32)
+    img_feature_right_test_np = np.asarray(img_feature_right[train_idx: ], dtype=np.float32)
+    account_feature_test_np = np.asarray(account_feature[train_idx: ], dtype=np.float32)
+    target_test_np = np.asarray(target[train_idx: ], dtype=np.float32)
+    
+    
     np.random.seed(666) 
-    np.random.shuffle(img_feature_left_np) 
-    np.random.shuffle(img_feature_right_np) 
-    np.random.shuffle(account_feature_np) 
-    np.random.shuffle(target_np) 
-    print(img_feature_left_np.shape)
-    print(img_feature_right_np.shape)
-    print(account_feature_np.shape)   
-    print(target_np.shape)
-    np.save("img_feature_left.npy", img_feature_left_np)
-    np.save("img_feature_right.npy", img_feature_right_np)
-    np.save("account_feature.npy", account_feature_np)
-    np.save("target.npy", target_np)
+    np.random.shuffle(img_feature_left_train_np) 
+    np.random.shuffle(img_feature_right_train_np) 
+    np.random.shuffle(account_feature_train_np) 
+    np.random.shuffle(target_train_np) 
+    
+    print(img_feature_left_train_np.shape)
+    print(img_feature_right_train_np.shape)
+    print(account_feature_train_np.shape)   
+    print(target_train_np.shape)
+    
+    np.save("img_feature_left_train.npy", img_feature_left_train_np)
+    np.save("img_feature_right_train.npy", img_feature_right_train_np)
+    np.save("account_feature_train.npy", account_feature_train_np)
+    np.save("target_train.npy", target_train_np)
+    
+    np.save("img_feature_left_test.npy", img_feature_left_test_np)
+    np.save("img_feature_right_test.npy", img_feature_right_test_np)
+    np.save("account_feature_test.npy", account_feature_test_np)
+    np.save("target_test.npy", target_test_np)
+    
+    
 
 if __name__=="__main__":
     make_base(sys.argv[1], sys.argv[2])
