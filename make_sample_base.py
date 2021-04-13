@@ -285,7 +285,7 @@ def make_base(tsv_path:str, feature_path: str):
     
     for account_str in account2video.keys():
         video_name_list = account2video[account_str]
-        account_info = account2video[account_str]
+        account_info = account2info[account_str]
         for video_name_str in video_name_list:
             video_feature = np.load(os.path.join(feature_path, video_name_str + ".npy"))
             for i in range(8):
