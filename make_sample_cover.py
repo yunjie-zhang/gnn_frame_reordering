@@ -226,20 +226,33 @@ def makeAccPair(account2video, video_name2idx):
         account2idx[acc_str] = acc_idx
         idx2account[acc_idx] = acc_str
         acc_idx += 1
-
+    
+    video_id_set = set()
     account2video_list = []
     for acc in account2video.keys():
         for video_id in account2video[acc]:
             account2video_list.append([acc, video_id])
-
+            video_id_set.insert(video_id)
+    video_cnt = len(video_id_set)
+    train_cnt = int(0.9 * video_cnt)
+    new_video_id_set = set()
+    cur_cnt = 0
+    
     account2pic_list = []
     for acc_video_pair in account2video_list:
         acc_id = acc_video_pair[0]
         video_id = acc_video_pair[1]
-        pic_id = video_name2idx[video_id][0]
-        account2pic_list.append([acc_id, pic_id])
-        #for pic_id in video_name2idx[video_id]:
-        #    account2pic_list.append([acc_id, pic_id])
+        if video_id in new_video_id_set:
+            cur_cnt = cur_cnt
+        else:
+            new_video_id_set.insert(video_id)
+            cur_cnt += 1
+        if cur_cnt < train_cnt:
+            pic_id = video_name2idx[video_id][0]
+            account2pic_list.append([acc_id, pic_id])
+        else:
+            for pic_id in video_name2idx[video_id]:
+                account2pic_list.append([acc_id, pic_id])
 
     acc_idx2pic_list = []
     pic2acc_idx_list = []
