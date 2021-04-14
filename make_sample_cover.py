@@ -232,7 +232,7 @@ def makeAccPair(account2video, video_name2idx):
     for acc in account2video.keys():
         for video_id in account2video[acc]:
             account2video_list.append([acc, video_id])
-            video_id_set.insert(video_id)
+            video_id_set.add(video_id)
     video_cnt = len(video_id_set)
     train_cnt = int(0.9 * video_cnt)
     new_video_id_set = set()
@@ -245,7 +245,7 @@ def makeAccPair(account2video, video_name2idx):
         if video_id in new_video_id_set:
             cur_cnt = cur_cnt
         else:
-            new_video_id_set.insert(video_id)
+            new_video_id_set.add(video_id)
             cur_cnt += 1
         if cur_cnt < train_cnt:
             pic_id = video_name2idx[video_id][0]
